@@ -1,0 +1,60 @@
+### Maven ###
+target/
+*/target/
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+dependency-reduced-pom.xml
+
+### IDEs ###
+# STS
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+
+### OS ###
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+### Others ###
+/mvnw
+/mvnw.cmd
+/.mvn/
+HELP.md
+/.gitattributes
+
+# Logs
+*.log
+
+# VSCode
+.vscode/
+
+# Temp files
+*.tmp
+*.swp
+*.bak
