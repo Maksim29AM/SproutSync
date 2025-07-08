@@ -32,4 +32,8 @@ public class User {
 
     @Size(min = 8, max = 100)
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    private Role role = Role.PARENT;
+
 }
