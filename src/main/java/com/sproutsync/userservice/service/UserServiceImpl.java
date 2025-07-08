@@ -1,5 +1,6 @@
 package com.sproutsync.userservice.service;
 
+import com.sproutsync.userservice.dto.UserUpdateDto;
 import com.sproutsync.userservice.model.User;
 import com.sproutsync.userservice.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -34,13 +35,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User update(Long id, User user) {
-        User fromBD = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found"));
-        fromBD.setUsername(user.getUsername());
-        fromBD.setSurname(user.getSurname());
-        fromBD.setEmail(user.getEmail());
-        fromBD.setPassword(user.getPassword());
-        return userRepository.save(fromBD);
+    public User update(Long id, UserUpdateDto dto) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        if (dto.getUsername() != null) {
+            user.setUsername(dto.getUsername());
+        }
+        if (dto.getSurname() != null) {
+            user.setSurname(dto.getSurname());
+        }
+        if (dto.getEmail() != null) {
+            user.setEmail(dto.getEmail());
+        }
+        if (dto.getPassword() != null) {
+            user.setPassword(dto.getPassword());
+        }
+        return userRepository.save(user);
     }
 
     @Override
