@@ -50,6 +50,9 @@ public class UserServiceImpl implements UserService {
         if (dto.getPassword() != null) {
             user.setPassword(dto.getPassword());
         }
+        if (dto.getRole() != null) {
+            user.setRole(dto.getRole());
+        }
         return userRepository.save(user);
     }
 
