@@ -1,21 +1,27 @@
 package com.sproutsync.userservice.service;
 
 import com.sproutsync.userservice.dto.UserUpdateDto;
+import com.sproutsync.userservice.model.Role;
 import com.sproutsync.userservice.model.User;
+import com.sproutsync.userservice.repository.RoleRepository;
 import com.sproutsync.userservice.repository.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -50,9 +56,13 @@ public class UserServiceImpl implements UserService {
         if (dto.getPassword() != null) {
             user.setPassword(dto.getPassword());
         }
-        if (dto.getRole() != null) {
-            user.setRole(dto.getRole());
+        if (dto.getRoleIds() != null) {
+            Set<Role> roles = roleRepository.findAllById(dto.getRoleIds())
+                    .stream()
+                    .collect(Collectors.toSet());
+            user.setRoles(roles);
         }
+
         return userRepository.save(user);
     }
 
@@ -60,4 +70,18 @@ public class UserServiceImpl implements UserService {
     public void delete(Long id) {
         userRepository.deleteById(id);
     }
+
+    @Override
+    public User findByUserName(String username) {
+        return userRepository.findByUsername(username);
+    }
+
+    @Override
+    public void saveUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        Role userRole = roleRepository.findByName("ROLE_USER");
+        user.setRoles(new HashSet<>(Arrays.asList(userRole)));
+        userRepository.save(user);
+    }
+
 }

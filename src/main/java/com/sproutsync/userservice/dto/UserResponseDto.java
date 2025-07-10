@@ -1,7 +1,8 @@
 package com.sproutsync.userservice.dto;
 
-import com.sproutsync.userservice.model.Role;
 import lombok.Data;
+
+import java.util.Set;
 
 @Data
 public class UserResponseDto {
@@ -10,5 +11,5 @@ public class UserResponseDto {
     private String username;
     private String surname;
     private String email;
-    private Role role;
+    private Set<String> roles;
 }

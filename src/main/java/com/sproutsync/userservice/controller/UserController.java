@@ -4,6 +4,7 @@ import com.sproutsync.userservice.dto.UserRequestDto;
 import com.sproutsync.userservice.dto.UserResponseDto;
 import com.sproutsync.userservice.dto.UserUpdateDto;
 import com.sproutsync.userservice.model.User;
+import com.sproutsync.userservice.repository.RoleRepository;
 import com.sproutsync.userservice.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
@@ -16,9 +17,11 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final RoleRepository roleRepository;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, RoleRepository roleRepository) {
         this.userService = userService;
+        this.roleRepository = roleRepository;
     }
 
     @GetMapping
@@ -38,7 +41,7 @@ public class UserController {
 
     @PostMapping
     public UserResponseDto create(@RequestBody @Valid UserRequestDto dto) {
-        User saved = userService.create(UserMapper.toEntity(dto));
+        User saved = userService.create(UserMapper.toEntity(dto, roleRepository));
         return UserMapper.toDto(saved);
     }
 
