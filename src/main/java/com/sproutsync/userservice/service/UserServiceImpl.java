@@ -79,9 +79,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public void saveUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        Role userRole = roleRepository.findByName("ROLE_USER");
-        user.setRoles(new HashSet<>(Arrays.asList(userRole)));
+        Role defaultRole = roleRepository.findByName("ROLE_PARENT")
+                .orElseThrow(() -> new RuntimeException("Default role ROLE_PARENT not found"));
+        user.setRoles(Set.of(defaultRole));
         userRepository.save(user);
     }
+
 
 }

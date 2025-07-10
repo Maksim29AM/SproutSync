@@ -12,7 +12,11 @@ import java.util.Set;
 public class UserMapper {
 
     public static User toEntity(UserRequestDto dto, RoleRepository roleRepository) {
-        Set<Role> roles = new HashSet<>(roleRepository.findAllById(dto.getRoleIds()));
+        Role defaultRole = roleRepository.findByName("ROLE_PARENT")
+                .orElseThrow(() -> new RuntimeException("Default role ROLE_PARENT not found"));
+
+        Set<Role> roles = Set.of(defaultRole);
+
         return new User(
                 null,
                 dto.getUsername(),
@@ -22,6 +26,7 @@ public class UserMapper {
                 roles
         );
     }
+
 
 
     public static UserResponseDto toDto(User user) {
