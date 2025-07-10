@@ -37,13 +37,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User create(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        if (user.getRoles() == null || user.getRoles().isEmpty()) {
+            Role defaultRole = roleRepository.findByName("ROLE_PARENT")
+                    .orElseThrow(() -> new RuntimeException("Default role ROLE_PARENT not found"));
+            user.setRoles(Set.of(defaultRole));
+        }
         return userRepository.save(user);
     }
+
 
     @Override
     public User update(Long id, UserUpdateDto dto) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
+
         if (dto.getUsername() != null) {
             user.setUsername(dto.getUsername());
         }
@@ -54,15 +62,8 @@ public class UserServiceImpl implements UserService {
             user.setEmail(dto.getEmail());
         }
         if (dto.getPassword() != null) {
-            user.setPassword(dto.getPassword());
+            user.setPassword(passwordEncoder.encode(dto.getPassword()));
         }
-        if (dto.getRoleIds() != null) {
-            Set<Role> roles = roleRepository.findAllById(dto.getRoleIds())
-                    .stream()
-                    .collect(Collectors.toSet());
-            user.setRoles(roles);
-        }
-
         return userRepository.save(user);
     }
 
