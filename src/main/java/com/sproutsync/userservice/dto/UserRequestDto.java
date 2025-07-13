@@ -1,11 +1,13 @@
 package com.sproutsync.userservice.dto;
 
+import com.sproutsync.userservice.model.Role;
 import jakarta.validation.constraints.*;
-
 import lombok.Data;
 
+import java.util.Set;
+
 @Data
-public class UserDto {
+public class UserRequestDto {
 
     @NotBlank
     @Size(min = 3, max = 25)
@@ -19,6 +21,8 @@ public class UserDto {
     @NotBlank
     private String email;
 
+    @NotBlank
     @Size(min = 8, max = 100)
     private String password;
+
 }
