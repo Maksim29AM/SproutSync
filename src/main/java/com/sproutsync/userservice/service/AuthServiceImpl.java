@@ -6,6 +6,7 @@ import com.sproutsync.userservice.repository.RoleRepository;
 import com.sproutsync.userservice.repository.UserRepository;
 import com.sproutsync.userservice.util.JwtUtil;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -47,6 +48,6 @@ public class AuthServiceImpl implements AuthService {
         if (authentication.isAuthenticated()) {
            return jwtUtil.generateToken(user.getEmail());
         }
-        return "Fail";
+        throw new BadCredentialsException("Invalid credentials");
     }
 }
