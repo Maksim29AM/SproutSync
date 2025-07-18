@@ -12,18 +12,20 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "access_request")
+@Table(name = "access_request", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"user_id", "group_id"})
+})
 public class AccessRequest {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User parent;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id", referencedColumnName = "id")
     private Group group;
 
