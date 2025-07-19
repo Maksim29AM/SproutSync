@@ -15,6 +15,7 @@ public class GroupMapper {
 
     public static GroupDto toGroupDto(Group group) {
         GroupDto dto = new GroupDto();
+        dto.setId(group.getId());
         dto.setName(group.getName());
         dto.setDescription(group.getDescription());
         dto.setMainFoto(group.getMainFoto());

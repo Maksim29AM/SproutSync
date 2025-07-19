@@ -6,6 +6,8 @@ import lombok.Data;
 @Data
 public class GroupDto {
 
+    private Long id;
+
     @NotBlank
     private String name;
 
