@@ -40,22 +40,14 @@ public class AccessRequestController {
 
     @GetMapping("/parent/{id}")
     public List<AccessRequestDto> requestsParent(@PathVariable Long id) {
-        User user = userService.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Parent not found"));
-        return accessRequestService.findRequestsByParent(user)
-                .stream()
-                .map(AccessRequestMapper::toDto)
-                .collect(Collectors.toList());
+        User user = userService.findById(id).orElseThrow(() -> new EntityNotFoundException("Parent not found"));
+        return accessRequestService.findRequestsByParent(user).stream().map(AccessRequestMapper::toDto).collect(Collectors.toList());
     }
 
     @GetMapping("/group/{id}")
     public List<AccessRequestDto> requestsByGroup(@PathVariable Long id) {
-        Group group = groupService.getGroupById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Group not found"));
-        return accessRequestService.findRequestsByGroup(group)
-                .stream()
-                .map(AccessRequestMapper::toDto)
-                .collect(Collectors.toList());
+        Group group = groupService.getGroupById(id).orElseThrow(() -> new EntityNotFoundException("Group not found"));
+        return accessRequestService.findRequestsByGroup(group).stream().map(AccessRequestMapper::toDto).collect(Collectors.toList());
     }
 
     @GetMapping()
@@ -70,26 +62,20 @@ public class AccessRequestController {
             throw new EntityNotFoundException("No requests with status: " + status);
         }
 
-        return request
-                .stream()
-                .map(AccessRequestMapper::toDto)
-                .collect(Collectors.toList());
+        return request.stream().map(AccessRequestMapper::toDto).collect(Collectors.toList());
     }
 
     @PostMapping()
     public AccessRequestDto createRequest(@RequestBody AccessRequestDto dto, Authentication authentication) {
         String email = authentication.getName();
         User user = userService.findByEmail(email);
-        Group group = groupService.getGroupById(dto.getGroupId())
-                .orElseThrow(() -> new EntityNotFoundException("Group not found"));
+        Group group = groupService.getGroupById(dto.getGroupId()).orElseThrow(() -> new EntityNotFoundException("Group not found"));
         AccessRequest saved = accessRequestService.createRequest(AccessRequestMapper.toEntity(user, group));
         return AccessRequestMapper.toDto(saved);
     }
 
-    @PutMapping("/{id}")
-    public AccessRequestDto updateRequest(
-            @PathVariable Long id,
-            @RequestParam String status) {
+    @PutMapping("/{id}/status")
+    public AccessRequestDto updateRequest(@PathVariable Long id, @RequestParam String status) {
 
         AccessStatus newStatus;
         try {
@@ -98,8 +84,7 @@ public class AccessRequestController {
             throw new EntityNotFoundException("Invalid status: " + status);
         }
 
-        AccessRequest request = accessRequestService.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Request not found"));
+        AccessRequest request = accessRequestService.findById(id).orElseThrow(() -> new EntityNotFoundException("Request not found"));
 
         if (request.getAccessStatus() == newStatus) {
             throw new IllegalArgumentException("This request already has status: " + status);
