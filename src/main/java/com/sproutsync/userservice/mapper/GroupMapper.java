@@ -3,12 +3,14 @@ package com.sproutsync.userservice.mapper;
 import com.sproutsync.userservice.dto.GroupDto;
 import com.sproutsync.userservice.model.Group;
 
+import java.util.Collections;
+
 public class GroupMapper {
 
     private GroupMapper() {}
 
     public static Group toEntity(GroupDto dto) {
-        return new Group(null, dto.getName(), dto.getDescription(), dto.getMainFoto());
+        return new Group(null, dto.getName(), dto.getDescription(), dto.getMainFoto(), Collections.emptyList());
     }
 
     public static GroupDto toGroupDto(Group group) {

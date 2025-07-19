@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -19,4 +20,7 @@ public class Group {
     private String name;
     private String description;
     private String mainFoto;
+
+    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AccessRequest> accessRequests;
 }
