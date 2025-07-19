@@ -8,6 +8,8 @@ public class AccessRequestDto {
 
     private Long id;
     private Long userId;
+    private String userName;
+    private String userSurname;
     private Long groupId;
     private AccessStatus accessStatus;
 

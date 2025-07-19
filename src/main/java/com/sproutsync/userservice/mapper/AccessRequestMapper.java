@@ -27,6 +27,8 @@ public class AccessRequestMapper {
         AccessRequestDto dto = new AccessRequestDto();
         dto.setId(accessRequest.getId());
         dto.setUserId(accessRequest.getParent().getId());
+        dto.setUserName(accessRequest.getParent().getUsername());
+        dto.setUserSurname(accessRequest.getParent().getSurname());
         dto.setGroupId(accessRequest.getGroup().getId());
         dto.setAccessStatus(accessRequest.getAccessStatus());
         return dto;
