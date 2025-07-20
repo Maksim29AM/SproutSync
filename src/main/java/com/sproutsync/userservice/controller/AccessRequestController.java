@@ -21,12 +21,6 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/requests")
 public class AccessRequestController {
 
-//  *  GET /api/requests/parent/{parentId} — заявки родителя
-//  *  GET /api/requests/group/{groupId} — заявки по группе
-//  *  GET /api/requests?status={status} — все заявки в статусе = RequestParam
-//  *  POST /api/requests — создать заявку (только родитель)
-//    PUT /api/requests/{id}/status — обновить статус (только модератор/админ)
-
     private final AccessRequestService accessRequestService;
     private final GroupService groupService;
     private final UserService userService;
