@@ -77,7 +77,7 @@ public class AnnounceController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/group/{id}")
+    @GetMapping("/group/{id}/announcement")
     public List<AnnouncementDto> getAnnouncementsByGroupId(@PathVariable Long id) {
         return announcementService.findByGroup_Id(id)
                 .stream()
