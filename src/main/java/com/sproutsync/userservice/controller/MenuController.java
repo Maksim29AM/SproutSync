@@ -7,10 +7,8 @@ import com.sproutsync.userservice.model.Group;
 import com.sproutsync.userservice.model.Menu;
 import com.sproutsync.userservice.service.GroupService;
 import com.sproutsync.userservice.service.MenuService;
-import com.sproutsync.userservice.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -51,21 +49,21 @@ public class MenuController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteActivity(@PathVariable Long id) {
+    public void deleteMenu(@PathVariable Long id) {
         Menu existing = menuService.getMenu(id)
                 .orElseThrow(() -> new EntityNotFoundException("Menu not found with id: " + id));
         menuService.deleteMenu(existing.getId());
     }
 
     @GetMapping("/{id}")
-    public MenuDto getActivity(@PathVariable Long id) {
+    public MenuDto getMenu(@PathVariable Long id) {
         return menuService.getMenu(id)
                 .map(MenuMapper::toDto)
                 .orElseThrow(() -> new EntityNotFoundException("Menu not found with id: " + id));
     }
 
     @GetMapping
-    public List<MenuDto> getAllActivities() {
+    public List<MenuDto> getAllMenus() {
         return menuService.getAllMenu()
                 .stream()
                 .map(MenuMapper::toDto)
@@ -73,7 +71,7 @@ public class MenuController {
     }
 
     @GetMapping("/group/{id}/menu")
-    public List<MenuDto> getActivitiesByGroup(@PathVariable(name = "id") Long groupId) {
+    public List<MenuDto> getMenusByGroup(@PathVariable(name = "id") Long groupId) {
         return menuService.findAllMenuByGroupId(groupId)
                 .stream()
                 .map(MenuMapper::toDto)
