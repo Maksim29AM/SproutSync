@@ -28,10 +28,10 @@ public class MenuDay {
     @JoinColumn(name = "group_id", referencedColumnName = "id", nullable = false)
     private Group group;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "menuDay",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Meal> meals;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "menu_day_allergen",
             joinColumns = @JoinColumn(name = "menu_day_id"),
