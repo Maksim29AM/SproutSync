@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Secured("ROLE_USER")
 @RestController
 @RequestMapping("/api/groups/{idGroup}/menu")
 public class MenuDayController {
