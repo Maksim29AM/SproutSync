@@ -1,7 +1,6 @@
 package com.sproutsync.userservice.config;
 
 
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -37,11 +36,17 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
 
-                        .requestMatchers(HttpMethod.POST, "/api/announce/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/announce/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/announce/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/announce/**").authenticated()                        .requestMatchers("/api/**").authenticated())
-//
+                        .requestMatchers(HttpMethod.POST, "/api/requests").hasRole("PARENT")
+
+                        .requestMatchers(HttpMethod.GET, "/api/requests/**").hasAnyRole("MODERATOR", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/**").hasAnyRole("PARENT", "MODERATOR", "ADMIN")
+
+                        .requestMatchers(HttpMethod.POST, "/api/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/**").hasRole("ADMIN")
+
+                        .requestMatchers("/api/**").authenticated())
+
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
