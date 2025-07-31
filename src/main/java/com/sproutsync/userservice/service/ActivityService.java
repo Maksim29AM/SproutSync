@@ -9,16 +9,14 @@ import java.util.Optional;
 
 public interface ActivityService {
 
-    Activity createActivity(Activity activity);
+    Activity createActivity(Long groupId, Activity activity);
 
-    Activity updateActivity(Long id, ActivityUpdateDto activityUpdateDto);
+    Activity updateActivity(Long group_id, Long id, ActivityUpdateDto activityUpdateDto);
 
-    void deleteActivity(Long id);
+    void deleteActivity(Long groupId, Long activityId);
 
-    Optional<Activity> getActivity(Long id);
+    Optional<Activity> getActivityByGroup(Long groupId, Long activityId);
 
-    List<Activity> getAllActivities();
-
-    List<Activity> findAllActivitiesByGroupId(Long groupId);
+    List<Activity> getAllActivitiesByGroupId(Long groupId);
 
 }

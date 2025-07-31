@@ -11,14 +11,16 @@ import com.sproutsync.userservice.service.GroupService;
 import com.sproutsync.userservice.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/activity")
+@RequestMapping("/api/groups/{idGroup}/activity")
 public class ActivityController {
 
     private final ActivityService activityService;
@@ -32,53 +34,37 @@ public class ActivityController {
     }
 
     @PostMapping
-    public ActivityDto createAnnouncement(@RequestBody @Valid ActivityDto activityDto, Authentication authentication) {
-        Group group = groupService.getGroupById(activityDto.getGroupId())
-                .orElseThrow(() -> new EntityNotFoundException("Group not found with id: " + activityDto.getGroupId()));
+    public ActivityDto createActivity(@PathVariable Long idGroup, @RequestBody @Valid ActivityDto activityDto, Authentication authentication) {
+        Group group = groupService.getGroupById(idGroup)
+                .orElseThrow(() -> new EntityNotFoundException("Group not found with id: " + idGroup));
         User user = userService.findByEmail(authentication.getName());
-        Activity saved = activityService.createActivity(ActivityMapper.toEntity(activityDto, group, user));
+        Activity saved = activityService.createActivity(idGroup,ActivityMapper.toEntity(activityDto, group, user));
         return ActivityMapper.toDto(saved);
     }
 
-    @PutMapping
-    public ActivityDto updateActivity(@RequestParam(name = "group") Long groupId, @RequestParam(name = "activity") Long activityId, @RequestBody @Valid ActivityUpdateDto activityUpdateDto) {
-        Activity existing = activityService.getActivity(activityId)
-                .orElseThrow(() -> new EntityNotFoundException("Activity not found with id: " + activityId));
-        Group existingGroup = groupService.getGroupById(groupId)
-                .orElseThrow(() -> new EntityNotFoundException("Group not found with id: " + groupId));
-        List<Activity> allActivities = activityService.findAllActivitiesByGroupId(groupId);
-        if (!allActivities.contains(existing)) {
-            throw new EntityNotFoundException("Group " + groupId + " not has activity with id: " + activityId);
-        }
-        Activity updated = activityService.updateActivity(activityId, activityUpdateDto);
+    @PutMapping("/{activityId}")
+    public ActivityDto updateActivity(@PathVariable Long idGroup, @PathVariable Long activityId, @RequestBody @Valid ActivityUpdateDto activityUpdateDto) {
+        Activity updated = activityService.updateActivity(idGroup, activityId, activityUpdateDto);
         return ActivityMapper.toDto(updated);
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteActivity(@PathVariable Long id) {
-        Activity existing = activityService.getActivity(id)
-                .orElseThrow(() -> new EntityNotFoundException("Activity not found with id: " + id));
-        activityService.deleteActivity(existing.getId());
+    @DeleteMapping("/{activityId}")
+    public void deleteActivity(@PathVariable Long idGroup, @PathVariable Long activityId) {
+        activityService.deleteActivity(idGroup,activityId);
     }
 
-    @GetMapping("/{id}")
-    public ActivityDto getActivity(@PathVariable Long id) {
-        return activityService.getActivity(id)
+    @GetMapping("/{activityId}")
+    @PreAuthorize("@accessChecker.hasApprovedAccess(authentication.name, #idGroup)")
+    public ActivityDto getActivity(@PathVariable Long idGroup, @PathVariable Long activityId) {
+        return activityService.getActivityByGroup(idGroup, activityId)
                 .map(ActivityMapper::toDto)
-                .orElseThrow(() -> new EntityNotFoundException("Activity not found with id: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("Activity not found with id: " + activityId));
     }
 
     @GetMapping
-    public List<ActivityDto> getAllActivities() {
-        return activityService.getAllActivities()
-                .stream()
-                .map(ActivityMapper::toDto)
-                .collect(Collectors.toList());
-    }
-
-    @GetMapping("/group/{id}/activity")
-    public List<ActivityDto> getActivitiesByGroup(@PathVariable(name = "id") Long groupId) {
-        return activityService.findAllActivitiesByGroupId(groupId)
+    @PreAuthorize("@accessChecker.hasApprovedAccess(authentication.name, #idGroup)")
+    public List<ActivityDto> getActivitiesByGroup(@PathVariable Long idGroup) {
+        return activityService.getAllActivitiesByGroupId(idGroup)
                 .stream()
                 .map(ActivityMapper::toDto)
                 .collect(Collectors.toList());
