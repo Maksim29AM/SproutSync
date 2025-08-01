@@ -4,20 +4,17 @@ import com.sproutsync.userservice.dto.AnnouncementUpdateDto;
 import com.sproutsync.userservice.model.Announcement;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface AnnouncementService {
 
-    Announcement createAnnouncement(Announcement announcement);
+    Announcement createAnnouncement(Long groupId, Announcement announcement);
 
-    Announcement updateAnnouncement(Long id, AnnouncementUpdateDto announcementDto);
+    Announcement updateAnnouncement(Long groupId, Long announcementId, AnnouncementUpdateDto announcementDto);
 
-    void deleteAnnouncement(Long id);
+    void deleteAnnouncement(Long groupId, Long activityId);
 
-    Optional<Announcement> getAnnouncement(Long id);
+    Announcement getAnnouncementByGroup(Long groupId, Long announcementId);
 
-    List<Announcement> getAllAnnouncements();
-
-    List<Announcement> findByGroup_Id(Long groupId);
+    List<Announcement> getAllAnnouncementsByGroupId(Long groupId);
 
 }
