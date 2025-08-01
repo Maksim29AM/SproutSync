@@ -9,28 +9,31 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class AnnouncementServiceImpl implements AnnouncementService {
 
-    private final AnnouncementRepository repository;
+    private final AnnouncementRepository announcementRepository;
     private final GroupRepository groupRepository;
 
     public AnnouncementServiceImpl(AnnouncementRepository repository, GroupRepository groupRepository) {
-        this.repository = repository;
+        this.announcementRepository = repository;
         this.groupRepository = groupRepository;
     }
 
     @Override
-    public Announcement createAnnouncement(Announcement announcement) {
-        return repository.save(announcement);
+    public Announcement createAnnouncement(Long groupId,Announcement announcement) {
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new EntityNotFoundException("Group with id:" + groupId + " not found"));
+        return announcementRepository.save(announcement);
     }
 
     @Override
-    public Announcement updateAnnouncement(Long id, AnnouncementUpdateDto updateDto) {
-        Announcement updateAnnouncement = repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Announcement with id:" + id + " not found"));
+    public Announcement updateAnnouncement(Long groupId, Long announcementId, AnnouncementUpdateDto updateDto) {
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new EntityNotFoundException("Group with id:" + groupId + " not found"));
+        Announcement updateAnnouncement = announcementRepository.findByGroupIdAndId(group.getId(), announcementId)
+                .orElseThrow(() -> new EntityNotFoundException("Announcement with id:" + announcementId + " not found"));
         if (updateDto.getTitle() != null) {
             updateAnnouncement.setTitle(updateDto.getTitle());
         }
@@ -40,31 +43,27 @@ public class AnnouncementServiceImpl implements AnnouncementService {
         if (updateDto.getPhoto() != null) {
             updateAnnouncement.setPhoto(updateDto.getPhoto());
         }
-        return repository.save(updateAnnouncement);
+        return announcementRepository.save(updateAnnouncement);
     }
 
     @Override
-    public void deleteAnnouncement(Long id) {
-        Announcement isExist = repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Announcement with id:" + id + " not found"));
-        repository.deleteById(isExist.getId());
-    }
-
-    @Override
-    public Optional<Announcement> getAnnouncement(Long id) {
-        return repository.findById(id);
-    }
-
-    @Override
-    public List<Announcement> getAllAnnouncements() {
-        return repository.findAll();
-    }
-
-    @Override
-    public List<Announcement> findByGroup_Id(Long groupId) {
-        Group group  = groupRepository.findById(groupId)
+    public void deleteAnnouncement(Long groupId,Long announcementId) {
+        Group group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new EntityNotFoundException("Group with id:" + groupId + " not found"));
+        Announcement existing = announcementRepository.findByGroupIdAndId(group.getId(), announcementId)
+                .orElseThrow(() -> new EntityNotFoundException("Announcement with id:" + announcementId + " not found"));
+        announcementRepository.deleteById(existing.getId());
+    }
 
-        return repository.findAllByGroup(group);
+    @Override
+    public Announcement getAnnouncementByGroup(Long groupId, Long announcementId) {
+        return announcementRepository.findByGroupIdAndId(groupId, announcementId)
+                .orElseThrow(() -> new EntityNotFoundException("Announcement with id: " + announcementId + " not found"));
+    }
+
+
+    @Override
+    public List<Announcement> getAllAnnouncementsByGroupId(Long groupId) {
+        return announcementRepository.findAllByGroupId(groupId);
     }
 }
