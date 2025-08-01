@@ -24,4 +24,6 @@ public interface AccessRequestService {
 
     List<AccessRequest> findAll();
 
+    Optional<AccessRequest> findByUserAndGroup(Long userId, Long groupId);
+
 }

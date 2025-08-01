@@ -11,6 +11,8 @@ import com.sproutsync.userservice.service.GroupService;
 import com.sproutsync.userservice.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,14 +44,14 @@ public class AnnounceController {
     }
 
     @PutMapping()
-    public AnnouncementDto updateAnnouncement(@RequestParam(name = "group") Long idGroup,@RequestParam(name = "announcement") Long idAnnouncement, @RequestBody @Valid AnnouncementUpdateDto updateDto) {
+    public AnnouncementDto updateAnnouncement(@RequestParam(name = "group") Long idGroup, @RequestParam(name = "announcement") Long idAnnouncement, @RequestBody @Valid AnnouncementUpdateDto updateDto) {
         Announcement existing = announcementService.getAnnouncement(idAnnouncement)
                 .orElseThrow(() -> new EntityNotFoundException("Announcement not found with id: " + idAnnouncement));
         Group existingGroup = groupService.getGroupById(idGroup)
                 .orElseThrow(() -> new EntityNotFoundException("Group not found with id: " + idGroup));
         List<Announcement> allAnnouncements = announcementService.findByGroup_Id(idGroup);
         if (!allAnnouncements.contains(existing)) {
-            throw new EntityNotFoundException("Group "+idGroup+" not has announcement with id: " + idAnnouncement);
+            throw new EntityNotFoundException("Group " + idGroup + " not has announcement with id: " + idAnnouncement);
         }
         Announcement updated = announcementService.updateAnnouncement(idAnnouncement, updateDto);
         return AnnouncementMapper.toDto(updated);
@@ -78,6 +80,7 @@ public class AnnounceController {
     }
 
     @GetMapping("/group/{id}/announcement")
+    @PreAuthorize("@accessChecker.hasApprovedAccess(authentication.name, #id)")
     public List<AnnouncementDto> getAnnouncementsByGroupId(@PathVariable Long id) {
         return announcementService.findByGroup_Id(id)
                 .stream()

@@ -1,9 +1,9 @@
 package com.sproutsync.userservice.config;
 
 
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -34,9 +34,19 @@ public class SecurityConfig {
         return http
                 .csrf(costomizer -> costomizer.disable())
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers("/api/auth/register", "/api/auth/login")
-                        .permitAll()
-                        .anyRequest().authenticated())
+                        .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
+
+                        .requestMatchers(HttpMethod.POST, "/api/requests").hasRole("PARENT")
+
+                        .requestMatchers(HttpMethod.GET, "/api/requests/**").hasAnyRole("MODERATOR", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/**").hasAnyRole("PARENT", "MODERATOR", "ADMIN")
+
+                        .requestMatchers(HttpMethod.POST, "/api/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/**").hasRole("ADMIN")
+
+                        .requestMatchers("/api/**").authenticated())
+
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)

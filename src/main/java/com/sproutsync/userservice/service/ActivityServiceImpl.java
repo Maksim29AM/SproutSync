@@ -23,14 +23,18 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public Activity createActivity(Activity activity) {
+    public Activity createActivity(Long groupId,Activity activity) {
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new EntityNotFoundException("Group with id " + groupId + " not found"));
         return activityRepository.save(activity);
     }
 
     @Override
-    public Activity updateActivity(Long id, ActivityUpdateDto updateDto) {
-        Activity updateActivity = activityRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Activity with id " + id + " not found"));
+    public Activity updateActivity(Long groupId, Long activityId, ActivityUpdateDto updateDto) {
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new EntityNotFoundException("Group with id " + groupId + " not found"));
+        Activity updateActivity = activityRepository.findByGroupIdAndId(group.getId(), activityId)
+                .orElseThrow(() -> new EntityNotFoundException("Activity with id " + activityId + " not found"));
         if (updateDto.getActivities() != null) {
             updateActivity.setActivities(updateDto.getActivities());
         }
@@ -42,24 +46,21 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public void deleteActivity(Long id) {
-        Activity existing = activityRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Activity with id " + id + " not found"));
+    public void deleteActivity(Long groupId,Long activityId) {
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new EntityNotFoundException("Group with id " + groupId + " not found"));
+        Activity existing = activityRepository.findByGroupIdAndId(group.getId(), activityId)
+                .orElseThrow(() -> new EntityNotFoundException("Activity with id " + activityId + " not found"));
         activityRepository.deleteById(existing.getId());
     }
 
     @Override
-    public Optional<Activity> getActivity(Long id) {
-        return activityRepository.findById(id);
+    public Optional<Activity> getActivityByGroup(Long groupId, Long activityId) {
+        return activityRepository.findByGroupIdAndId(groupId, activityId);
     }
 
     @Override
-    public List<Activity> getAllActivities() {
-        return activityRepository.findAll();
-    }
-
-    @Override
-    public List<Activity> findAllActivitiesByGroupId(Long groupId) {
+    public List<Activity> getAllActivitiesByGroupId(Long groupId) {
         Group group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new EntityNotFoundException("Group with id " + groupId + " not found"));
         return activityRepository.findAllByGroup(group);

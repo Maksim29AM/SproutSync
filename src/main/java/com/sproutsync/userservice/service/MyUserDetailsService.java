@@ -27,6 +27,8 @@ public class MyUserDetailsService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException(username);
         }
+        System.out.println("Loaded user: " + user.getEmail());
+        System.out.println("Roles: " + user.getRoles());
         return new UserPrincipal(user);
     }
 }
