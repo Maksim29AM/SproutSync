@@ -1,6 +1,5 @@
 package com.sproutsync.userservice.repository;
 
-import com.sproutsync.userservice.model.Group;
 import com.sproutsync.userservice.model.MenuDay;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -13,7 +12,7 @@ public interface MenuDayRepository extends JpaRepository<MenuDay, Long> {
 
     Optional<MenuDay> findByGroupIdAndId(Long group_id, Long id);
 
-    List<MenuDay> getAllByGroup(Group group);
+    List<MenuDay> getAllByGroupId(Long group);
 
-    Optional<MenuDay> findByGroupIdAndDate(Long groupId, LocalDate date);
+   Optional<MenuDay> findByGroupIdAndDate(Long groupId, LocalDate date);
 }
