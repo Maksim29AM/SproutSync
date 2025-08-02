@@ -37,7 +37,7 @@ public class ActivityController {
         Group group = groupService.getGroupById(idGroup)
                 .orElseThrow(() -> new EntityNotFoundException("Group not found with id: " + idGroup));
         User user = userService.findByEmail(authentication.getName());
-        Activity saved = activityService.createActivity(idGroup,ActivityMapper.toEntity(activityDto, group, user));
+        Activity saved = activityService.createActivity(idGroup, ActivityMapper.toEntity(activityDto, group, user));
         return ActivityMapper.toDto(saved);
     }
 
@@ -49,7 +49,7 @@ public class ActivityController {
 
     @DeleteMapping("/{activityId}")
     public void deleteActivity(@PathVariable Long idGroup, @PathVariable Long activityId) {
-        activityService.deleteActivity(idGroup,activityId);
+        activityService.deleteActivity(idGroup, activityId);
     }
 
     @GetMapping("/{activityId}")
