@@ -18,24 +18,31 @@ public class MenuDayServiceImpl implements MenuDayService {
 
     private final MenuDayRepository menuDayRepository;
     private final AllergenRepository allergenRepository;
+    private final GroupRepository groupRepository;
 
 
-
-    public MenuDayServiceImpl(MenuDayRepository menuDayRepository, AllergenRepository allergenRepository) {
+    public MenuDayServiceImpl(MenuDayRepository menuDayRepository, AllergenRepository allergenRepository, GroupRepository groupRepository) {
         this.menuDayRepository = menuDayRepository;
         this.allergenRepository = allergenRepository;
-
+        this.groupRepository = groupRepository;
     }
 
     @Override
-    public MenuDay createMenuDay(MenuDay menuDay) {
+    public MenuDay createMenuDay(Long groupId, MenuDay menuDay) {
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new EntityNotFoundException("Group with id " + groupId + " not found"));
+        if (menuDayRepository.findByGroupIdAndDate(group.getId(), menuDay.getDate()).isPresent()) {
+            throw new IllegalStateException("Menu for date " + menuDay.getDate() + " already exists for group with id " + groupId);
+        }
         return menuDayRepository.save(menuDay);
     }
 
     @Override
     @Transactional
-    public MenuDay updateMenuDay(Long menuId, Long groupId, MenuDayUpdateDto menuDayDto) {
-        MenuDay updateMenu = menuDayRepository.findByGroupIdAndId(groupId, menuId)
+    public MenuDay updateMenuDay(Long groupId, Long menuId, MenuDayUpdateDto menuDayDto) {
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new EntityNotFoundException("Group with id " + groupId + " not found"));
+        MenuDay updateMenu = menuDayRepository.findByGroupIdAndId(group.getId(), menuId)
                 .orElseThrow(() -> new EntityNotFoundException("Menu with id " + menuId + " not found"));
 
         if (menuDayDto.getDate() != null) {
@@ -51,7 +58,6 @@ public class MenuDayServiceImpl implements MenuDayService {
                             mealDto -> mealDto.getMealType().getName(),
                             MealDto::getDescription,
                             (desc1, desc2) -> desc2));
-
             updateMenu.getMeals().forEach(existingMeal -> {
                 String typeName = existingMeal.getMealType().getName();
                 if (descriptionMap.containsKey(typeName)) {
@@ -60,25 +66,24 @@ public class MenuDayServiceImpl implements MenuDayService {
             });
         }
 
-
         if (menuDayDto.getAllergens() != null) {
             Set<Allergen> allergens = menuDayDto.getAllergens().stream()
                     .map(dto -> allergenRepository.findById(dto.getId())
                             .orElseThrow(() -> new EntityNotFoundException("Allergen not found: " + dto.getId())))
                     .collect(Collectors.toSet());
-
             updateMenu.setAllergens(allergens);
         }
-
         return menuDayRepository.save(updateMenu);
     }
 
 
     @Override
     @Transactional
-    public void deleteMenuDay(Group group, Long menuId) {
+    public void deleteMenuDay(Long groupId, Long menuId) {
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new EntityNotFoundException("Group with id " + groupId + " not found"));
         MenuDay menuDay = menuDayRepository.findByGroupIdAndId(group.getId(), menuId)
-                .orElseThrow(() -> new EntityNotFoundException("Menu day not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Menu with id " + menuId + " not found"));
         menuDay.getAllergens().clear();
         menuDayRepository.save(menuDay);
         menuDayRepository.delete(menuDay);
@@ -86,18 +91,24 @@ public class MenuDayServiceImpl implements MenuDayService {
 
 
     @Override
-    public Optional<MenuDay> getMenuDay(Long groupId, Long menuId) {
-        return menuDayRepository.findByGroupIdAndId(groupId, menuId);
+    public MenuDay getMenuDayByGroupId(Long groupId, Long menuId) {
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new EntityNotFoundException("Group with id " + groupId + " not found"));
+        return menuDayRepository.findByGroupIdAndId(group.getId(), menuId)
+                .orElseThrow(() -> new EntityNotFoundException("Menu with id " + menuId + " not found"));
     }
 
     @Override
-    public List<MenuDay> getAllByGroup(Group groupId) {
-        return menuDayRepository.getAllByGroup(groupId);
+    public List<MenuDay> getAllMenuByGroupId(Long groupId) {
+        return menuDayRepository.getAllByGroupId(groupId);
     }
 
     @Override
-    public Optional<MenuDay> getMenuDayByData(Long groupId,LocalDate date) {
-        return menuDayRepository.findByGroupIdAndDate(groupId, date);
+    public MenuDay getMenuDayByData(Long groupId, LocalDate date) {
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new EntityNotFoundException("Group with id " + groupId + " not found"));
+        return menuDayRepository.findByGroupIdAndDate(groupId,date)
+                .orElseThrow(() -> new EntityNotFoundException("Menu for date " + date + " not found for group with id " + groupId));
     }
 
 }
