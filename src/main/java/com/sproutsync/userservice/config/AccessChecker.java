@@ -32,6 +32,13 @@ public class AccessChecker {
         if (user == null) {
             return false;
         }
+
+        boolean isAdmin = user.getRoles().stream()
+                .anyMatch(role -> role.getName().equals("ROLE_ADMIN"));
+        if (isAdmin) {
+            return true;
+        }
+
         Optional<AccessRequest> accessRequestOpt = request.findByUserAndGroup(user.getId(), groupId);
         boolean hasAccess = accessRequestOpt.isPresent() && accessRequestOpt.get().getAccessStatus() == AccessStatus.APPROVED;
 
