@@ -23,11 +23,7 @@ public class MenuDayMapper {
         menuDay.setGroup(group);
 
         List<Meal> meals = dto.getMeals().stream()
-                .map(mealDto -> {
-                    MealType mealType = mealTypeRepository.findByName(mealDto.getMealType().getName())
-                            .orElseThrow(() -> new RuntimeException("MealType not found with name: " + mealDto.getMealType().getName()));
-                    return MealMapper.toEntity(mealDto, menuDay, mealTypeRepository);
-                })
+                .map(mealDto -> MealMapper.toEntity(mealDto, menuDay, mealTypeRepository))
                 .collect(Collectors.toList());
         menuDay.setMeals(meals);
 
