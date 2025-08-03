@@ -107,12 +107,6 @@ public class AccessRequestServiceImpl implements AccessRequestService {
 
         return requests;
     }
-
-    @Override
-    public List<AccessRequest> findAll() {
-        return accessRequestRepository.findAll();
-    }
-
     @Override
     public Optional<AccessRequest> findByUserAndGroup(Long userId, Long groupId) {
         return accessRequestRepository.findByParentIdAndGroupId(userId, groupId);

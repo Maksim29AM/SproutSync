@@ -1,9 +1,6 @@
 package com.sproutsync.userservice.service;
 
 import com.sproutsync.userservice.model.AccessRequest;
-import com.sproutsync.userservice.model.Group;
-import com.sproutsync.userservice.model.User;
-import com.sproutsync.userservice.util.AccessStatus;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,8 +18,6 @@ public interface AccessRequestService {
     List<AccessRequest> findRequestsByGroupId(Long groupId);
 
     List<AccessRequest> findAllByStatus(String statusRaw);
-
-    List<AccessRequest> findAll();
 
     Optional<AccessRequest> findByUserAndGroup(Long userId, Long groupId);
 
