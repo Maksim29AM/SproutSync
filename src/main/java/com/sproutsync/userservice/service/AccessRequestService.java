@@ -10,17 +10,17 @@ import java.util.Optional;
 
 public interface AccessRequestService {
 
-    AccessRequest createRequest(AccessRequest request);
+    AccessRequest createRequest(String email, Long groupId);
 
-    AccessRequest updateRequestStatus(Long id, AccessStatus newStatus);
+    AccessRequest updateRequestStatus(Long id, String status);
 
     Optional<AccessRequest> findById(Long id);
 
-    List<AccessRequest> findRequestsByParent(User parent);
+    List<AccessRequest> findRequestsByParentId(Long parentId);
 
-    List<AccessRequest> findRequestsByGroup(Group group);
+    List<AccessRequest> findRequestsByGroupId(Long groupId);
 
-    List<AccessRequest> findAllByStatus(AccessStatus status);
+    List<AccessRequest> findAllByStatus(String statusRaw);
 
     List<AccessRequest> findAll();
 
