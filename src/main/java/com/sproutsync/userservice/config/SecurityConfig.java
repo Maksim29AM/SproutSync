@@ -36,9 +36,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
 
-                        .requestMatchers(HttpMethod.POST, "/api/requests").hasRole("PARENT")
+                        .requestMatchers(HttpMethod.POST, "/api/access-requests").hasRole("PARENT")
 
-                        .requestMatchers(HttpMethod.GET, "/api/requests/**").hasAnyRole("MODERATOR", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/access-requests/**").hasAnyRole("MODERATOR", "ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/**").hasAnyRole("PARENT", "MODERATOR", "ADMIN")
 
                         .requestMatchers(HttpMethod.POST, "/api/**").hasRole("ADMIN")
