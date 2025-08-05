@@ -1,6 +1,5 @@
 package com.sproutsync.userservice.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,12 +24,14 @@ public class S3Service {
         this.s3Client = s3Client;
     }
 
-    public void uploadFile(MultipartFile file) throws IOException {
+    public String uploadFile(MultipartFile file) throws IOException {
+        String key = file.getOriginalFilename();
         s3Client.putObject(PutObjectRequest.builder()
                         .bucket(bucketName)
-                        .key(file.getOriginalFilename())
+                        .key(key)
                         .build(),
                 RequestBody.fromBytes(file.getBytes()));
+        return String.format("https://%s.s3.amazonaws.com/%s", bucketName, key);
     }
 
     public byte[] downloadFile(String key) {
@@ -39,5 +40,18 @@ public class S3Service {
                 .key(key)
                 .build());
         return objectAsBytes.asByteArray();
+    }
+
+    public void deleteFile(String fileUrl) {
+        String key = extractKeyFromUrl(fileUrl);
+        s3Client.deleteObject(builder -> builder
+                .bucket(bucketName)
+                .key(key)
+                .build());
+    }
+
+    private String extractKeyFromUrl(String fileUrl) {
+        String baseUrl = String.format("https://%s.s3.amazonaws.com/", bucketName);
+        return fileUrl.replace(baseUrl, "");
     }
 }
