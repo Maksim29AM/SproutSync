@@ -11,6 +11,8 @@ import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 @Service
 public class S3Service {
@@ -29,9 +31,11 @@ public class S3Service {
         s3Client.putObject(PutObjectRequest.builder()
                         .bucket(bucketName)
                         .key(key)
+                        .contentType(file.getContentType())
                         .build(),
                 RequestBody.fromBytes(file.getBytes()));
-        return String.format("https://%s.s3.amazonaws.com/%s", bucketName, key);
+        String encodedKey = URLEncoder.encode(key, StandardCharsets.UTF_8);
+        return String.format("https://%s.s3.amazonaws.com/%s", bucketName, encodedKey);
     }
 
     public byte[] downloadFile(String key) {
