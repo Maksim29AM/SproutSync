@@ -41,7 +41,7 @@ public class PhotoServiceImpl implements PhotoService {
         }
         String url;
         try {
-            url = s3Service.uploadFile(file);
+            url = s3Service.uploadFileAndGetUrl(file);
         } catch (IOException e) {
             throw new RuntimeException("Failed to upload file", e);
         }

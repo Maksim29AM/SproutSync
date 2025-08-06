@@ -17,6 +17,8 @@ import java.nio.charset.StandardCharsets;
 @Service
 public class S3Service {
 
+    private static final String S3_URL_TEMPLATE = "https://%s.s3.amazonaws.com/%s";
+
     private final S3Client s3Client;
 
     @Value("${aws.bucket.name}")
@@ -26,7 +28,7 @@ public class S3Service {
         this.s3Client = s3Client;
     }
 
-    public String uploadFile(MultipartFile file) throws IOException {
+    public String uploadFileAndGetUrl(MultipartFile file) throws IOException {
         String key = file.getOriginalFilename();
         s3Client.putObject(PutObjectRequest.builder()
                         .bucket(bucketName)
@@ -34,9 +36,14 @@ public class S3Service {
                         .contentType(file.getContentType())
                         .build(),
                 RequestBody.fromBytes(file.getBytes()));
-        String encodedKey = URLEncoder.encode(key, StandardCharsets.UTF_8);
-        return String.format("https://%s.s3.amazonaws.com/%s", bucketName, encodedKey);
+        return createS3Url(key);
     }
+
+    private String createS3Url(String key) {
+        String encodedKey = URLEncoder.encode(key, StandardCharsets.UTF_8);
+        return String.format(S3_URL_TEMPLATE, bucketName, encodedKey);
+    }
+
 
     public byte[] downloadFile(String key) {
         ResponseBytes<GetObjectResponse> objectAsBytes = s3Client.getObjectAsBytes(GetObjectRequest.builder()
