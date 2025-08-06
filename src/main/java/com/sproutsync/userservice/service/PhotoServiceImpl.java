@@ -55,8 +55,10 @@ public class PhotoServiceImpl implements PhotoService {
     @Override
     @Transactional
     public void deletePhoto(Long groupId, Long photoId) {
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new EntityNotFoundException("Group with id " + groupId + " not found"));
         Photo photo = photoRepository.findByIdAndGroupId(photoId, groupId)
-                .orElseThrow(() -> new EntityNotFoundException("Photo with id:" + photoId + " not found in group:" + groupId));
+                .orElseThrow(() -> new EntityNotFoundException("Photo with id:" + photoId + " not found in group:" + group));
 
         s3Service.deleteFile(photo.getUrl());
         photoRepository.deleteByIdAndGroupId(photoId, groupId);
