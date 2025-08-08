@@ -58,3 +58,4 @@ HELP.md
 *.tmp
 *.swp
 *.bak
+.env
