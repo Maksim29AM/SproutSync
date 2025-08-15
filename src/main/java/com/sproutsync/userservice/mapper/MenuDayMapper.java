@@ -1,8 +1,9 @@
 package com.sproutsync.userservice.mapper;
 
-import com.sproutsync.userservice.dto.AllergenDto;
-import com.sproutsync.userservice.dto.MealDto;
-import com.sproutsync.userservice.dto.MenuDayDto;
+import com.sproutsync.userservice.dto.menuDto.response.AllergenDto;
+import com.sproutsync.userservice.dto.menuDto.response.MealDto;
+import com.sproutsync.userservice.dto.menuDto.request.MenuDayCreateDto;
+import com.sproutsync.userservice.dto.menuDto.response.MenuDayDto;
 import com.sproutsync.userservice.model.*;
 import com.sproutsync.userservice.repository.AllergenRepository;
 import com.sproutsync.userservice.repository.MealTypeRepository;
@@ -16,9 +17,8 @@ public class MenuDayMapper {
     private MenuDayMapper() {
     }
 
-    public static MenuDay toEntity(MenuDayDto dto, Group group, MealTypeRepository mealTypeRepository, AllergenRepository allergenRepository) {
+    public static MenuDay toEntity(MenuDayCreateDto dto, Group group, MealTypeRepository mealTypeRepository, AllergenRepository allergenRepository) {
         MenuDay menuDay = new MenuDay();
-        menuDay.setId(dto.getId());
         menuDay.setDate(dto.getDate());
         menuDay.setGroup(group);
 
@@ -44,7 +44,6 @@ public class MenuDayMapper {
         MenuDayDto dto = new MenuDayDto();
         dto.setId(menuDay.getId());
         dto.setDate(menuDay.getDate());
-        dto.setGroupId(menuDay.getGroup().getId());
         dto.setMeals(meals);
         dto.setAllergens(allergens);
         dto.setCreatedAt(menuDay.getCreatedAt());
