@@ -4,6 +4,7 @@ import com.sproutsync.userservice.dto.authDto.request.AuthLoginRequestDto;
 import com.sproutsync.userservice.dto.authDto.request.AuthRegisterRequestDto;
 import com.sproutsync.userservice.dto.authDto.responce.AuthResponseDto;
 import com.sproutsync.userservice.service.AuthService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,12 +21,12 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public AuthResponseDto register(@RequestBody AuthRegisterRequestDto user) {
+    public AuthResponseDto register(@RequestBody @Valid AuthRegisterRequestDto user) {
         return authService.register(user);
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody AuthLoginRequestDto user) {
+    public String login(@RequestBody @Valid AuthLoginRequestDto user) {
         return authService.verify(user);
     }
 }
