@@ -1,7 +1,7 @@
 package com.sproutsync.userservice.mapper;
 
-import com.sproutsync.userservice.dto.MealDto;
-import com.sproutsync.userservice.dto.MealTypeDto;
+import com.sproutsync.userservice.dto.menuDto.response.MealDto;
+import com.sproutsync.userservice.dto.menuDto.response.MealTypeDto;
 import com.sproutsync.userservice.model.Meal;
 import com.sproutsync.userservice.model.MealType;
 import com.sproutsync.userservice.model.MenuDay;
@@ -30,7 +30,6 @@ public class MealMapper {
         typeDto.setName(meal.getMealType().getName());
 
         MealDto dto = new MealDto();
-        dto.setId(meal.getId());
         dto.setDescription(meal.getDescription());
 
         dto.setMealType(typeDto);
