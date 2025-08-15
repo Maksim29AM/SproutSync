@@ -1,6 +1,7 @@
-package com.sproutsync.userservice.dto;
+package com.sproutsync.userservice.dto.menuDto.request;
 
 
+import com.sproutsync.userservice.dto.menuDto.response.MealDto;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -14,5 +15,5 @@ public class MenuDayUpdateDto {
 
     private List<MealDto> meals;
 
-    private Set<AllergenDto> allergens;
+    private Set<AllergenCreateDto> allergens;
 }
