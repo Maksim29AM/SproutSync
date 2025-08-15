@@ -1,6 +1,6 @@
 package com.sproutsync.userservice.mapper;
 
-import com.sproutsync.userservice.dto.AllergenDto;
+import com.sproutsync.userservice.dto.menuDto.response.AllergenDto;
 import com.sproutsync.userservice.model.Allergen;
 
 
