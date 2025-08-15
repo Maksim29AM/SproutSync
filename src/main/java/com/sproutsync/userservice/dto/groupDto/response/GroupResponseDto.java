@@ -1,10 +1,10 @@
-package com.sproutsync.userservice.dto;
+package com.sproutsync.userservice.dto.groupDto.response;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class GroupDto {
+public class GroupResponseDto {
 
     private Long id;
 
