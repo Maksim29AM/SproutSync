@@ -1,21 +1,19 @@
 package com.sproutsync.userservice.controller;
 
-import com.sproutsync.userservice.dto.MenuDayDto;
-import com.sproutsync.userservice.dto.MenuDayUpdateDto;
+import com.sproutsync.userservice.dto.menuDto.request.MenuDayCreateDto;
+import com.sproutsync.userservice.dto.menuDto.response.MenuDayDto;
+import com.sproutsync.userservice.dto.menuDto.request.MenuDayUpdateDto;
 import com.sproutsync.userservice.mapper.MenuDayMapper;
 import com.sproutsync.userservice.model.Group;
 import com.sproutsync.userservice.model.MenuDay;
-import com.sproutsync.userservice.model.User;
 import com.sproutsync.userservice.repository.AllergenRepository;
 import com.sproutsync.userservice.repository.MealTypeRepository;
 import com.sproutsync.userservice.repository.MenuDayRepository;
 import com.sproutsync.userservice.service.GroupService;
 import com.sproutsync.userservice.service.MenuDayService;
-import com.sproutsync.userservice.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -28,24 +26,21 @@ public class MenuDayController {
 
     private final MenuDayService menuDayservice;
     private final GroupService groupService;
-    private final UserService userService;
     private final MealTypeRepository mealTypeRepository;
     private final AllergenRepository allergenRepository;
 
-    public MenuDayController(MenuDayService menuDayservice, GroupService groupService, UserService userService, MealTypeRepository mealTypeRepository, MenuDayRepository menuDayRepository, AllergenRepository allergenRepository) {
+    public MenuDayController(MenuDayService menuDayservice, GroupService groupService, MealTypeRepository mealTypeRepository, MenuDayRepository menuDayRepository, AllergenRepository allergenRepository) {
         this.menuDayservice = menuDayservice;
         this.groupService = groupService;
-        this.userService = userService;
         this.mealTypeRepository = mealTypeRepository;
         this.allergenRepository = allergenRepository;
     }
 
     @PostMapping
-    public MenuDayDto createMenuDay(@PathVariable Long idGroup, @RequestBody @Valid MenuDayDto menuDayDto, Authentication authentication) {
+    public MenuDayDto createMenuDay(@PathVariable Long idGroup, @RequestBody @Valid MenuDayCreateDto menuDayCreateDto) {
         Group group = groupService.getGroupById(idGroup)
                 .orElseThrow(() -> new EntityNotFoundException("Group not found with id: " + idGroup));
-        User user = userService.findByEmail(authentication.getName());
-        MenuDay saved = menuDayservice.createMenuDay(group.getId(), MenuDayMapper.toEntity(menuDayDto, group, mealTypeRepository, allergenRepository));
+        MenuDay saved = menuDayservice.createMenuDay(group.getId(), MenuDayMapper.toEntity(menuDayCreateDto, group, mealTypeRepository, allergenRepository));
         return MenuDayMapper.toDto(saved);
     }
 
