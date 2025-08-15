@@ -2,7 +2,7 @@ package com.sproutsync.userservice.controller;
 
 import com.sproutsync.userservice.dto.authDto.request.AuthLoginRequestDto;
 import com.sproutsync.userservice.dto.authDto.request.AuthRegisterRequestDto;
-import com.sproutsync.userservice.dto.authDto.responce.AuthResponseDto;
+import com.sproutsync.userservice.dto.authDto.response.AuthResponseDto;
 import com.sproutsync.userservice.service.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;

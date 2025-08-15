@@ -1,4 +1,4 @@
-package com.sproutsync.userservice.dto.authDto.responce;
+package com.sproutsync.userservice.dto.authDto.response;
 
 
 import lombok.AllArgsConstructor;

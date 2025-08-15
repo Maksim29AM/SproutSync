@@ -1,7 +1,7 @@
 package com.sproutsync.userservice.mapper;
 
 import com.sproutsync.userservice.dto.authDto.request.AuthRegisterRequestDto;
-import com.sproutsync.userservice.dto.authDto.responce.AuthResponseDto;
+import com.sproutsync.userservice.dto.authDto.response.AuthResponseDto;
 import com.sproutsync.userservice.model.Role;
 import com.sproutsync.userservice.model.User;
 import com.sproutsync.userservice.repository.RoleRepository;
