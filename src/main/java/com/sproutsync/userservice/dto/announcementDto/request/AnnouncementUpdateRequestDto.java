@@ -1,9 +1,10 @@
-package com.sproutsync.userservice.dto;
+package com.sproutsync.userservice.dto.announcementDto.request;
 
 import lombok.Data;
 
 @Data
-public class AnnouncementUpdateDto {
+public class AnnouncementUpdateRequestDto {
+
     private String title;
     private String message;
     private String photo;
