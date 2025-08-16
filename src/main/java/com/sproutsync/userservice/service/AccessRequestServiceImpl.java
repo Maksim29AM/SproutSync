@@ -48,22 +48,13 @@ public class AccessRequestServiceImpl implements AccessRequestService {
 
     @Override
     @Transactional
-    public AccessRequest updateRequestStatus(Long id, String status) {
-        AccessStatus newStatus;
-        try {
-            newStatus = AccessStatus.valueOf(status.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new EntityNotFoundException("Invalid status: " + status);
-        }
-
+    public AccessRequest updateRequestStatus(Long id, AccessStatus status) {
         AccessRequest request = accessRequestRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("AccessRequest with id " + id + " not found"));
-
-        if (request.getAccessStatus() == newStatus) {
-            throw new IllegalStateException("Request already has status: " + newStatus);
+        if (request.getAccessStatus() == status) {
+            throw new IllegalStateException("Request already has status: " + status);
         }
-
-        request.setAccessStatus(newStatus);
+        request.setAccessStatus(status);
         return accessRequestRepository.save(request);
     }
 
