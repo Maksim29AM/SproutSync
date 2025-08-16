@@ -1,6 +1,6 @@
 package com.sproutsync.userservice.service;
 
-import com.sproutsync.userservice.dto.ActivityUpdateDto;
+import com.sproutsync.userservice.dto.activityDto.request.ActivityUpdateRequestDto;
 import com.sproutsync.userservice.model.Activity;
 import com.sproutsync.userservice.model.Group;
 import com.sproutsync.userservice.repository.ActivityRepository;
@@ -23,14 +23,18 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public Activity createActivity(Long groupId,Activity activity) {
+    public Activity createActivity(Long groupId, Activity activity) {
         Group group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new EntityNotFoundException("Group with id " + groupId + " not found"));
+        Activity activityExist = activityRepository.findByGroupIdAndDateTime(group.getId(), activity.getDateTime());
+        if (activityExist != null) {
+            throw new EntityNotFoundException("Activity with date " + activity.getDateTime() + " already exist");
+        }
         return activityRepository.save(activity);
     }
 
     @Override
-    public Activity updateActivity(Long groupId, Long activityId, ActivityUpdateDto updateDto) {
+    public Activity updateActivity(Long groupId, Long activityId, ActivityUpdateRequestDto updateDto) {
         Group group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new EntityNotFoundException("Group with id " + groupId + " not found"));
         Activity updateActivity = activityRepository.findByGroupIdAndId(group.getId(), activityId)
@@ -46,7 +50,7 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public void deleteActivity(Long groupId,Long activityId) {
+    public void deleteActivity(Long groupId, Long activityId) {
         Group group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new EntityNotFoundException("Group with id " + groupId + " not found"));
         Activity existing = activityRepository.findByGroupIdAndId(group.getId(), activityId)
