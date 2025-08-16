@@ -1,7 +1,8 @@
 package com.sproutsync.userservice.controller;
 
-import com.sproutsync.userservice.dto.AnnouncementDto;
-import com.sproutsync.userservice.dto.AnnouncementUpdateDto;
+import com.sproutsync.userservice.dto.announcementDto.request.AnnouncementCreateRequestDto;
+import com.sproutsync.userservice.dto.announcementDto.response.AnnouncementResponseDto;
+import com.sproutsync.userservice.dto.announcementDto.request.AnnouncementUpdateRequestDto;
 import com.sproutsync.userservice.mapper.AnnouncementMapper;
 import com.sproutsync.userservice.model.Announcement;
 import com.sproutsync.userservice.model.Group;
@@ -34,16 +35,16 @@ public class AnnounceController {
     }
 
     @PostMapping
-    public AnnouncementDto createAnnouncement(@PathVariable Long idGroup, @RequestBody @Valid AnnouncementDto announcementDto, Authentication authentication) {
+    public AnnouncementResponseDto createAnnouncement(@PathVariable Long idGroup, @RequestBody @Valid AnnouncementCreateRequestDto announcementCreateDtoRequestDto, Authentication authentication) {
         Group group = groupService.getGroupById(idGroup)
                 .orElseThrow(() -> new EntityNotFoundException("Group not found with id: " + idGroup));
         User user = userService.findByEmail(authentication.getName());
-        Announcement saved = announcementService.createAnnouncement(idGroup, AnnouncementMapper.toEntity(announcementDto, group, user));
+        Announcement saved = announcementService.createAnnouncement(idGroup, AnnouncementMapper.toEntity(announcementCreateDtoRequestDto, group, user));
         return AnnouncementMapper.toDto(saved);
     }
 
     @PutMapping("/{announceId}")
-    public AnnouncementDto updateAnnouncement(@PathVariable Long idGroup, @PathVariable Long announceId, @RequestBody @Valid AnnouncementUpdateDto updateDto) {
+    public AnnouncementResponseDto updateAnnouncement(@PathVariable Long idGroup, @PathVariable Long announceId, @RequestBody @Valid AnnouncementUpdateRequestDto updateDto) {
         Announcement updated = announcementService.updateAnnouncement(idGroup, announceId, updateDto);
         return AnnouncementMapper.toDto(updated);
     }
@@ -55,14 +56,14 @@ public class AnnounceController {
 
     @GetMapping("/{announceId}")
     @PreAuthorize("@accessChecker.hasApprovedAccess(authentication.name, #idGroup)")
-    public AnnouncementDto getAnnouncementByGroupId(@PathVariable Long idGroup, @PathVariable Long announceId) {
+    public AnnouncementResponseDto getAnnouncementByGroupId(@PathVariable Long idGroup, @PathVariable Long announceId) {
         Announcement announcement = announcementService.getAnnouncementByGroup(idGroup, announceId);
         return AnnouncementMapper.toDto(announcement);
     }
 
     @GetMapping
     @PreAuthorize("@accessChecker.hasApprovedAccess(authentication.name, #idGroup)")
-    public List<AnnouncementDto> getAllAnnouncementsByGroupId(@PathVariable Long idGroup) {
+    public List<AnnouncementResponseDto> getAllAnnouncementsByGroupId(@PathVariable Long idGroup) {
         return announcementService.getAllAnnouncementsByGroupId(idGroup)
                 .stream()
                 .map(AnnouncementMapper::toDto)
