@@ -1,7 +1,8 @@
 package com.sproutsync.userservice.controller;
 
-import com.sproutsync.userservice.dto.ActivityDto;
-import com.sproutsync.userservice.dto.ActivityUpdateDto;
+import com.sproutsync.userservice.dto.activityDto.request.ActivityCreateRequestDto;
+import com.sproutsync.userservice.dto.activityDto.response.ActivityResponseDto;
+import com.sproutsync.userservice.dto.activityDto.request.ActivityUpdateRequestDto;
 import com.sproutsync.userservice.mapper.ActivityMapper;
 import com.sproutsync.userservice.model.Activity;
 import com.sproutsync.userservice.model.Group;
@@ -33,17 +34,17 @@ public class ActivityController {
     }
 
     @PostMapping
-    public ActivityDto createActivity(@PathVariable Long idGroup, @RequestBody @Valid ActivityDto activityDto, Authentication authentication) {
+    public ActivityResponseDto createActivity(@PathVariable Long idGroup, @RequestBody @Valid ActivityCreateRequestDto activityCreateRequestDtoDto, Authentication authentication) {
         Group group = groupService.getGroupById(idGroup)
                 .orElseThrow(() -> new EntityNotFoundException("Group not found with id: " + idGroup));
         User user = userService.findByEmail(authentication.getName());
-        Activity saved = activityService.createActivity(idGroup, ActivityMapper.toEntity(activityDto, group, user));
+        Activity saved = activityService.createActivity(idGroup, ActivityMapper.toEntity(activityCreateRequestDtoDto, group, user));
         return ActivityMapper.toDto(saved);
     }
 
     @PutMapping("/{activityId}")
-    public ActivityDto updateActivity(@PathVariable Long idGroup, @PathVariable Long activityId, @RequestBody @Valid ActivityUpdateDto activityUpdateDto) {
-        Activity updated = activityService.updateActivity(idGroup, activityId, activityUpdateDto);
+    public ActivityResponseDto updateActivity(@PathVariable Long idGroup, @PathVariable Long activityId, @RequestBody @Valid ActivityUpdateRequestDto activityUpdateRequestDto) {
+        Activity updated = activityService.updateActivity(idGroup, activityId, activityUpdateRequestDto);
         return ActivityMapper.toDto(updated);
     }
 
@@ -54,7 +55,7 @@ public class ActivityController {
 
     @GetMapping("/{activityId}")
     @PreAuthorize("@accessChecker.hasApprovedAccess(authentication.name, #idGroup)")
-    public ActivityDto getActivity(@PathVariable Long idGroup, @PathVariable Long activityId) {
+    public ActivityResponseDto getActivity(@PathVariable Long idGroup, @PathVariable Long activityId) {
         return activityService.getActivityByGroup(idGroup, activityId)
                 .map(ActivityMapper::toDto)
                 .orElseThrow(() -> new EntityNotFoundException("Activity not found with id: " + activityId));
@@ -62,7 +63,7 @@ public class ActivityController {
 
     @GetMapping
     @PreAuthorize("@accessChecker.hasApprovedAccess(authentication.name, #idGroup)")
-    public List<ActivityDto> getActivitiesByGroup(@PathVariable Long idGroup) {
+    public List<ActivityResponseDto> getActivitiesByGroup(@PathVariable Long idGroup) {
         return activityService.getAllActivitiesByGroupId(idGroup)
                 .stream()
                 .map(ActivityMapper::toDto)
