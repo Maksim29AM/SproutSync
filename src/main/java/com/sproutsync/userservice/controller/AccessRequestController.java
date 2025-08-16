@@ -1,9 +1,12 @@
 package com.sproutsync.userservice.controller;
 
-import com.sproutsync.userservice.dto.AccessRequestDto;
+import com.sproutsync.userservice.dto.accessRequestDto.request.AccessCreateRequestDto;
+import com.sproutsync.userservice.dto.accessRequestDto.request.AccessUpdateRequestDto;
+import com.sproutsync.userservice.dto.accessRequestDto.response.AccessResponseDto;
 import com.sproutsync.userservice.mapper.AccessRequestMapper;
 import com.sproutsync.userservice.model.AccessRequest;
 import com.sproutsync.userservice.service.AccessRequestService;
+import com.sproutsync.userservice.util.AccessStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,21 +26,21 @@ public class AccessRequestController {
 
 
     @GetMapping("/parent/{id}")
-    public List<AccessRequestDto> getRequestsForParent(@PathVariable Long id) {
+    public List<AccessResponseDto> getRequestsForParent(@PathVariable Long id) {
         return accessRequestService.findRequestsByParentId(id).stream()
                 .map(AccessRequestMapper::toDto)
                 .toList();
     }
 
     @GetMapping("/group/{id}")
-    public List<AccessRequestDto> getRequestsByGroup(@PathVariable Long id) {
+    public List<AccessResponseDto> getRequestsByGroup(@PathVariable Long id) {
         return accessRequestService.findRequestsByGroupId(id).stream()
                 .map(AccessRequestMapper::toDto)
                 .collect(Collectors.toList());
     }
 
     @GetMapping
-    public List<AccessRequestDto> getRequestsByStatus(@RequestParam String status) {
+    public List<AccessResponseDto> getRequestsByStatus(@RequestParam String status) {
         List<AccessRequest> requests = accessRequestService.findAllByStatus(status);
         return requests.stream()
                 .map(AccessRequestMapper::toDto)
@@ -45,14 +48,16 @@ public class AccessRequestController {
     }
 
     @PostMapping
-    public AccessRequestDto createRequest(@RequestBody AccessRequestDto dto, Authentication authentication) {
+    public AccessResponseDto createRequest(@RequestBody AccessCreateRequestDto dto, Authentication authentication) {
         AccessRequest saved = accessRequestService.createRequest(authentication.getName(), dto.getGroupId());
         return AccessRequestMapper.toDto(saved);
     }
 
-    @PutMapping("/{id}/status")
-    public AccessRequestDto updateRequest(@PathVariable Long id, @RequestParam String status) {
-        AccessRequest updated = accessRequestService.updateRequestStatus(id, status);
+    @PutMapping("/status")
+    public AccessResponseDto updateRequest(@RequestBody AccessUpdateRequestDto dto) {
+        AccessRequest updated = accessRequestService.updateRequestStatus(
+                dto.getId(),
+                AccessStatus.fromString(dto.getAccessStatus()));
         return AccessRequestMapper.toDto(updated);
     }
 
