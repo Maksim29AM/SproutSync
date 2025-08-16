@@ -1,6 +1,6 @@
 package com.sproutsync.userservice.service;
 
-import com.sproutsync.userservice.dto.ActivityUpdateDto;
+import com.sproutsync.userservice.dto.activityDto.request.ActivityUpdateRequestDto;
 import com.sproutsync.userservice.model.Activity;
 
 
@@ -11,7 +11,7 @@ public interface ActivityService {
 
     Activity createActivity(Long groupId, Activity activity);
 
-    Activity updateActivity(Long group_id, Long id, ActivityUpdateDto activityUpdateDto);
+    Activity updateActivity(Long group_id, Long id, ActivityUpdateRequestDto activityUpdateRequestDto);
 
     void deleteActivity(Long groupId, Long activityId);
 
