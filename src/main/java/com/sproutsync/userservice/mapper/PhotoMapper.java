@@ -1,7 +1,7 @@
 package com.sproutsync.userservice.mapper;
 
-import com.sproutsync.userservice.dto.PhotoDto;
-import com.sproutsync.userservice.dto.PhotoUploadDto;
+import com.sproutsync.userservice.dto.photoDto.response.PhotoResponseDto;
+import com.sproutsync.userservice.dto.photoDto.request.PhotoUploadRequestDto;
 import com.sproutsync.userservice.model.Group;
 import com.sproutsync.userservice.model.Photo;
 import com.sproutsync.userservice.model.User;
@@ -9,8 +9,8 @@ import com.sproutsync.userservice.model.User;
 
 public class PhotoMapper {
 
-    public static PhotoDto toDto(Photo entity) {
-        PhotoDto dto = new PhotoDto();
+    public static PhotoResponseDto toDto(Photo entity) {
+        PhotoResponseDto dto = new PhotoResponseDto();
         dto.setId(entity.getId());
         dto.setGroupId(entity.getGroup().getId());
         dto.setUrl(entity.getUrl());
@@ -22,7 +22,7 @@ public class PhotoMapper {
         return dto;
     }
 
-    public static Photo toEntity(PhotoUploadDto dto, Group group, User user) {
+    public static Photo toEntity(PhotoUploadRequestDto dto, Group group, User user) {
         return new Photo(
                 null,
                 group,

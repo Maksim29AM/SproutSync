@@ -1,27 +1,23 @@
-package com.sproutsync.userservice.dto;
+package com.sproutsync.userservice.dto.announcementDto.response;
 
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
-public class AnnouncementDto {
+public class AnnouncementResponseDto {
 
     private Long id;
 
     private Long groupId;
 
-    @NotBlank
     private String title;
 
-    @NotBlank
     private String message;
     private String photo;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private Long createdBy;
-
+    private Long createdByUserId;
 }

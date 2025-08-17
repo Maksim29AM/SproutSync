@@ -1,7 +1,8 @@
 package com.sproutsync.userservice.mapper;
 
-import com.sproutsync.userservice.dto.AnnouncementDto;
-import com.sproutsync.userservice.dto.AnnouncementUpdateDto;
+import com.sproutsync.userservice.dto.announcementDto.request.AnnouncementCreateRequestDto;
+import com.sproutsync.userservice.dto.announcementDto.response.AnnouncementResponseDto;
+import com.sproutsync.userservice.dto.announcementDto.request.AnnouncementUpdateRequestDto;
 import com.sproutsync.userservice.model.Announcement;
 import com.sproutsync.userservice.model.Group;
 import com.sproutsync.userservice.model.User;
@@ -11,7 +12,7 @@ public class AnnouncementMapper {
     private AnnouncementMapper() {
     }
 
-    public static Announcement toEntity(AnnouncementDto dto, Group group, User user) {
+    public static Announcement toEntity(AnnouncementResponseDto dto, Group group, User user) {
         return new Announcement(
                 null,
                 group,
@@ -24,7 +25,7 @@ public class AnnouncementMapper {
         );
     }
 
-    public static Announcement toEntity(AnnouncementUpdateDto dto, Group group, User user) {
+    public static Announcement toEntity(AnnouncementUpdateRequestDto dto, Group group, User user) {
         return new Announcement(
                 null,
                 group,
@@ -37,8 +38,21 @@ public class AnnouncementMapper {
         );
     }
 
-    public static AnnouncementDto toDto(Announcement entity) {
-        AnnouncementDto dto = new AnnouncementDto();
+    public static Announcement toEntity(AnnouncementCreateRequestDto dto, Group group, User user) {
+        return new Announcement(
+                null,
+                group,
+                dto.getTitle(),
+                dto.getMessage(),
+                dto.getPhoto(),
+                null,
+                null,
+                user
+        );
+    }
+
+    public static AnnouncementResponseDto toDto(Announcement entity) {
+        AnnouncementResponseDto dto = new AnnouncementResponseDto();
         dto.setId(entity.getId());
         dto.setGroupId(entity.getGroup().getId());
         dto.setTitle(entity.getTitle());
@@ -46,7 +60,7 @@ public class AnnouncementMapper {
         dto.setPhoto(entity.getPhoto());
         dto.setCreatedAt(entity.getCreatedAt());
         dto.setUpdatedAt(entity.getUpdatedAt());
-        dto.setCreatedBy(entity.getCreatedBy().getId());
+        dto.setCreatedByUserId(entity.getCreatedBy().getId());
         return dto;
     }
 }

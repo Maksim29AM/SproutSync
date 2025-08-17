@@ -1,6 +1,6 @@
 package com.sproutsync.userservice.mapper;
 
-import com.sproutsync.userservice.dto.AccessRequestDto;
+import com.sproutsync.userservice.dto.accessRequestDto.response.AccessResponseDto;
 import com.sproutsync.userservice.model.AccessRequest;
 import com.sproutsync.userservice.model.Group;
 import com.sproutsync.userservice.model.User;
@@ -23,8 +23,8 @@ public class AccessRequestMapper {
                 null);
     }
 
-    public static AccessRequestDto toDto(AccessRequest accessRequest) {
-        AccessRequestDto dto = new AccessRequestDto();
+    public static AccessResponseDto toDto(AccessRequest accessRequest) {
+        AccessResponseDto dto = new AccessResponseDto();
         dto.setId(accessRequest.getId());
         dto.setUserId(accessRequest.getParent().getId());
         dto.setUserName(accessRequest.getParent().getUsername());

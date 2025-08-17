@@ -1,6 +1,6 @@
 package com.sproutsync.userservice.service;
 
-import com.sproutsync.userservice.dto.AnnouncementUpdateDto;
+import com.sproutsync.userservice.dto.announcementDto.request.AnnouncementUpdateRequestDto;
 import com.sproutsync.userservice.model.Announcement;
 import com.sproutsync.userservice.model.Group;
 import com.sproutsync.userservice.repository.AnnouncementRepository;
@@ -29,7 +29,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     }
 
     @Override
-    public Announcement updateAnnouncement(Long groupId, Long announcementId, AnnouncementUpdateDto updateDto) {
+    public Announcement updateAnnouncement(Long groupId, Long announcementId, AnnouncementUpdateRequestDto updateDto) {
         Group group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new EntityNotFoundException("Group with id:" + groupId + " not found"));
         Announcement updateAnnouncement = announcementRepository.findByGroupIdAndId(group.getId(), announcementId)

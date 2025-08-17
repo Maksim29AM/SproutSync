@@ -1,12 +1,10 @@
-package com.sproutsync.userservice.dto;
+package com.sproutsync.userservice.dto.groupDto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class GroupDto {
-
-    private Long id;
+public class GroupRequestDto {
 
     @NotBlank
     private String name;
@@ -16,5 +14,4 @@ public class GroupDto {
 
     @NotBlank
     private String mainFoto;
-
 }

@@ -1,4 +1,4 @@
-package com.sproutsync.userservice.dto;
+package com.sproutsync.userservice.dto.menuDto.response;
 
 import lombok.Data;
 
@@ -6,8 +6,6 @@ import lombok.Data;
 public class MealDto {
 
     private MealTypeDto mealType;
-
-    private Long id;
 
     private String description;
 

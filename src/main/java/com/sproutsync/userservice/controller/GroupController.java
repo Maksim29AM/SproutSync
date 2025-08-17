@@ -1,7 +1,8 @@
 package com.sproutsync.userservice.controller;
 
 
-import com.sproutsync.userservice.dto.GroupDto;
+import com.sproutsync.userservice.dto.groupDto.request.GroupRequestDto;
+import com.sproutsync.userservice.dto.groupDto.response.GroupResponseDto;
 import com.sproutsync.userservice.mapper.GroupMapper;
 import com.sproutsync.userservice.model.Group;
 import com.sproutsync.userservice.service.GroupService;
@@ -23,13 +24,13 @@ public class GroupController {
     }
 
     @PostMapping
-    public GroupDto create(@RequestBody @Valid GroupDto dto) {
+    public GroupResponseDto create(@RequestBody @Valid GroupRequestDto dto) {
         Group saved = groupService.createGroup(GroupMapper.toEntity(dto));
         return GroupMapper.toGroupDto(saved);
     }
 
     @PutMapping("/{id}")
-    public GroupDto update(@PathVariable Long id, @RequestBody @Valid GroupDto dto) {
+    public GroupResponseDto update(@PathVariable Long id, @RequestBody @Valid GroupRequestDto dto) {
         Group updated = groupService.updateGroup(id, GroupMapper.toEntity(dto));
         return GroupMapper.toGroupDto(updated);
     }
@@ -40,7 +41,7 @@ public class GroupController {
     }
 
     @GetMapping
-    public List<GroupDto> getAllGroups() {
+    public List<GroupResponseDto> getAllGroups() {
         return groupService.getAllGroups()
                 .stream()
                 .map(GroupMapper::toGroupDto)
@@ -48,7 +49,7 @@ public class GroupController {
     }
 
     @GetMapping("/{id}")
-    public GroupDto getGroupById(@PathVariable Long id) {
+    public GroupResponseDto getGroupById(@PathVariable Long id) {
         return groupService.getGroupById(id)
                 .map(GroupMapper::toGroupDto)
                 .orElseThrow(()->new EntityNotFoundException("Group not found"));

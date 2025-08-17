@@ -1,6 +1,7 @@
 package com.sproutsync.userservice.service;
 
 import com.sproutsync.userservice.model.AccessRequest;
+import com.sproutsync.userservice.util.AccessStatus;
 
 import java.util.List;
 import java.util.Optional;
@@ -9,7 +10,7 @@ public interface AccessRequestService {
 
     AccessRequest createRequest(String email, Long groupId);
 
-    AccessRequest updateRequestStatus(Long id, String status);
+    AccessRequest updateRequestStatus(Long id, AccessStatus status);
 
     Optional<AccessRequest> findById(Long id);
 

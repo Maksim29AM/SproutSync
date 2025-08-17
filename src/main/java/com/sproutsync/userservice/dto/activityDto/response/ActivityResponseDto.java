@@ -1,24 +1,19 @@
-package com.sproutsync.userservice.dto;
+package com.sproutsync.userservice.dto.activityDto.response;
 
-import jakarta.validation.constraints.Future;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
-public class ActivityDto {
+public class ActivityResponseDto {
 
     private Long id;
 
-    @NotNull
-    @Future
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime dateTime;
 
-    @NotBlank
     private String activities;
-
 
     private LocalDateTime createdAt;
 
