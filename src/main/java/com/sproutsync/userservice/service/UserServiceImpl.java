@@ -9,7 +9,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -73,12 +72,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findByUserName(String username) {
-        return userRepository.findByUsername(username);
-    }
-
-    @Override
-    public User findByEmail(String email) {
+    public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 }
