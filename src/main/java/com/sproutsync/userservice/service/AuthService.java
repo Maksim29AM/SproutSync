@@ -1,10 +1,12 @@
 package com.sproutsync.userservice.service;
 
-import com.sproutsync.userservice.model.User;
+import com.sproutsync.userservice.dto.authDto.request.AuthLoginRequestDto;
+import com.sproutsync.userservice.dto.authDto.request.AuthRegisterRequestDto;
+import com.sproutsync.userservice.dto.authDto.response.AuthResponseDto;
 
 public interface AuthService {
 
-    User register(User user);
+    AuthResponseDto register(AuthRegisterRequestDto user);
 
-    String verify(User user);
+    String verify(AuthLoginRequestDto user);
 }

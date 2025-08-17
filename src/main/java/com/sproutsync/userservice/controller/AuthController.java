@@ -1,7 +1,10 @@
 package com.sproutsync.userservice.controller;
 
-import com.sproutsync.userservice.model.User;
+import com.sproutsync.userservice.dto.authDto.request.AuthLoginRequestDto;
+import com.sproutsync.userservice.dto.authDto.request.AuthRegisterRequestDto;
+import com.sproutsync.userservice.dto.authDto.response.AuthResponseDto;
 import com.sproutsync.userservice.service.AuthService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,12 +21,12 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public User register(@RequestBody User user) {
+    public AuthResponseDto register(@RequestBody @Valid AuthRegisterRequestDto user) {
         return authService.register(user);
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody User user) {
+    public String login(@RequestBody @Valid AuthLoginRequestDto user) {
         return authService.verify(user);
     }
 }

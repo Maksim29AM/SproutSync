@@ -1,13 +1,12 @@
-package com.sproutsync.userservice.dto;
+package com.sproutsync.userservice.dto.userDto.request;
 
 
-import com.sproutsync.userservice.model.Role;
 import lombok.Data;
 
 import java.util.Set;
 
 @Data
-public class UserUpdateDto {
+public class UserUpdateRequestDto {
     private String username;
     private String surname;
     private String email;

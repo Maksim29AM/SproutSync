@@ -1,11 +1,11 @@
-package com.sproutsync.userservice.dto;
+package com.sproutsync.userservice.dto.photoDto.response;
 
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
-public class PhotoDto {
+public class PhotoResponseDto {
 
     private Long id;
     private Long groupId;

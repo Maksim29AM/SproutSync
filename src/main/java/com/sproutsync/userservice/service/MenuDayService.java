@@ -1,6 +1,6 @@
 package com.sproutsync.userservice.service;
 
-import com.sproutsync.userservice.dto.MenuDayUpdateDto;
+import com.sproutsync.userservice.dto.menuDto.request.MenuDayUpdateDto;
 import com.sproutsync.userservice.model.MenuDay;
 
 import java.time.LocalDate;

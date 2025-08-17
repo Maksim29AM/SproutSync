@@ -1,7 +1,7 @@
 package com.sproutsync.userservice.service;
 
-import com.sproutsync.userservice.dto.MealDto;
-import com.sproutsync.userservice.dto.MenuDayUpdateDto;
+import com.sproutsync.userservice.dto.menuDto.response.MealDto;
+import com.sproutsync.userservice.dto.menuDto.request.MenuDayUpdateDto;
 import com.sproutsync.userservice.model.*;
 import com.sproutsync.userservice.repository.*;
 import jakarta.persistence.EntityNotFoundException;
@@ -55,11 +55,11 @@ public class MenuDayServiceImpl implements MenuDayService {
                             && mealDto.getMealType().getName() != null
                             && mealDto.getDescription() != null)
                     .collect(Collectors.toMap(
-                            mealDto -> mealDto.getMealType().getName(),
+                            mealDto -> mealDto.getMealType().getName().toLowerCase(),
                             MealDto::getDescription,
                             (desc1, desc2) -> desc2));
             updateMenu.getMeals().forEach(existingMeal -> {
-                String typeName = existingMeal.getMealType().getName();
+                String typeName = existingMeal.getMealType().getName().toLowerCase();
                 if (descriptionMap.containsKey(typeName)) {
                     existingMeal.setDescription(descriptionMap.get(typeName));
                 }

@@ -28,11 +28,8 @@ public class AccessChecker {
     public boolean hasApprovedAccess(String email, Long groupId) {
         Group group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new EntityNotFoundException("Group with id: " + groupId + " not found"));
-        User user = userService.findByEmail(email);
-        if (user == null) {
-            return false;
-        }
-
+        User user = userService.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with email: " + email));
         boolean isAdmin = user.getRoles().stream()
                 .anyMatch(role -> role.getName().equals("ROLE_ADMIN"));
         if (isAdmin) {

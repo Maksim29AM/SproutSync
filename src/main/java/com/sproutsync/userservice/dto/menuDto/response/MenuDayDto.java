@@ -1,4 +1,4 @@
-package com.sproutsync.userservice.dto;
+package com.sproutsync.userservice.dto.menuDto.response;
 
 import lombok.Data;
 
@@ -11,8 +11,6 @@ import java.util.Set;
 public class MenuDayDto {
 
     private Long id;
-
-    private Long groupId;
 
     private LocalDate date;
 

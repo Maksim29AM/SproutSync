@@ -28,10 +28,8 @@ public class AccessRequestServiceImpl implements AccessRequestService {
     @Override
     @Transactional
     public AccessRequest createRequest(String email, Long groupId) {
-        User user = userService.findByEmail(email);
-        if (user == null) {
-            throw new EntityNotFoundException("User not found with email: " + email);
-        }
+        User user = userService.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with email: " + email));
         Group group = groupService.getGroupById(groupId)
                 .orElseThrow(() -> new EntityNotFoundException("Group not found with id: " + groupId));
         Optional<AccessRequest> existingRequest = accessRequestRepository.findByParentIdAndGroupId(user.getId(), groupId);
@@ -48,22 +46,13 @@ public class AccessRequestServiceImpl implements AccessRequestService {
 
     @Override
     @Transactional
-    public AccessRequest updateRequestStatus(Long id, String status) {
-        AccessStatus newStatus;
-        try {
-            newStatus = AccessStatus.valueOf(status.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new EntityNotFoundException("Invalid status: " + status);
-        }
-
+    public AccessRequest updateRequestStatus(Long id, AccessStatus status) {
         AccessRequest request = accessRequestRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("AccessRequest with id " + id + " not found"));
-
-        if (request.getAccessStatus() == newStatus) {
-            throw new IllegalStateException("Request already has status: " + newStatus);
+        if (request.getAccessStatus() == status) {
+            throw new IllegalStateException("Request already has status: " + status);
         }
-
-        request.setAccessStatus(newStatus);
+        request.setAccessStatus(status);
         return accessRequestRepository.save(request);
     }
 

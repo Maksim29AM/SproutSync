@@ -1,6 +1,6 @@
 package com.sproutsync.userservice.service;
 
-import com.sproutsync.userservice.dto.PhotoUploadDto;
+import com.sproutsync.userservice.dto.photoDto.request.PhotoUploadRequestDto;
 import com.sproutsync.userservice.mapper.PhotoMapper;
 import com.sproutsync.userservice.model.Group;
 import com.sproutsync.userservice.model.Photo;
@@ -32,13 +32,11 @@ public class PhotoServiceImpl implements PhotoService {
 
     @Override
     @Transactional
-    public Photo uploadPhoto(MultipartFile file, Long groupId, PhotoUploadDto uploadDto, String uploaderEmail) {
+    public Photo uploadPhoto(MultipartFile file, Long groupId, PhotoUploadRequestDto uploadDto, String uploaderEmail) {
         Group group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new EntityNotFoundException("Group with id: " + groupId + " not found"));
-        User user = userService.findByEmail(uploaderEmail);
-        if (user == null) {
-            throw new EntityNotFoundException("User not found with email: " + uploaderEmail);
-        }
+        User user = userService.findByEmail(uploaderEmail)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with email: " + uploaderEmail));
         String url;
         try {
             url = s3Service.uploadFileAndGetUrl(file);

@@ -1,4 +1,4 @@
-package com.sproutsync.userservice.dto;
+package com.sproutsync.userservice.dto.userDto.response;
 
 import lombok.Data;
 

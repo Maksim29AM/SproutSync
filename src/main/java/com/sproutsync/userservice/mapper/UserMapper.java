@@ -1,7 +1,7 @@
 package com.sproutsync.userservice.mapper;
 
-import com.sproutsync.userservice.dto.UserRequestDto;
-import com.sproutsync.userservice.dto.UserResponseDto;
+import com.sproutsync.userservice.dto.userDto.request.UserCreateRequestDto;
+import com.sproutsync.userservice.dto.userDto.response.UserResponseDto;
 import com.sproutsync.userservice.model.Role;
 import com.sproutsync.userservice.model.User;
 import com.sproutsync.userservice.repository.RoleRepository;
@@ -11,7 +11,7 @@ import java.util.Set;
 
 public class UserMapper {
 
-    public static User toEntity(UserRequestDto dto, RoleRepository roleRepository) {
+    public static User toEntity(UserCreateRequestDto dto, RoleRepository roleRepository) {
         Role defaultRole = roleRepository.findByName("ROLE_PARENT")
                 .orElseThrow(() -> new RuntimeException("Default role ROLE_PARENT not found"));
 
