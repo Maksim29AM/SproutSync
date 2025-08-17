@@ -37,7 +37,8 @@ public class ActivityController {
     public ActivityResponseDto createActivity(@PathVariable Long idGroup, @RequestBody @Valid ActivityCreateRequestDto activityCreateRequestDtoDto, Authentication authentication) {
         Group group = groupService.getGroupById(idGroup)
                 .orElseThrow(() -> new EntityNotFoundException("Group not found with id: " + idGroup));
-        User user = userService.findByEmail(authentication.getName());
+        User user = userService.findByEmail(authentication.getName())
+                .orElseThrow(() -> new EntityNotFoundException("User not found with email: " + authentication));
         Activity saved = activityService.createActivity(idGroup, ActivityMapper.toEntity(activityCreateRequestDtoDto, group, user));
         return ActivityMapper.toDto(saved);
     }
