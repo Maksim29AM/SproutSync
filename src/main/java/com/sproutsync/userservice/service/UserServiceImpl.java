@@ -1,6 +1,6 @@
 package com.sproutsync.userservice.service;
 
-import com.sproutsync.userservice.dto.UserUpdateDto;
+import com.sproutsync.userservice.dto.userDto.request.UserUpdateRequestDto;
 import com.sproutsync.userservice.model.Role;
 import com.sproutsync.userservice.model.User;
 import com.sproutsync.userservice.repository.RoleRepository;
@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public User update(Long id, UserUpdateDto dto) {
+    public User update(Long id, UserUpdateRequestDto dto) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -62,6 +62,15 @@ public class UserServiceImpl implements UserService {
         }
         if (dto.getPassword() != null) {
             user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        }
+        if (dto.getRoleIds() != null) {
+            Set<Role> roles = new HashSet<>();
+            for (Long roleId : dto.getRoleIds()) {
+                Role role = roleRepository.findById(roleId)
+                        .orElseThrow(() -> new RuntimeException("Role not found"));
+                roles.add(role);
+            }
+            user.setRoles(roles);
         }
         return userRepository.save(user);
     }
