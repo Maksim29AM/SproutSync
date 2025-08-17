@@ -28,10 +28,8 @@ public class AccessRequestServiceImpl implements AccessRequestService {
     @Override
     @Transactional
     public AccessRequest createRequest(String email, Long groupId) {
-        User user = userService.findByEmail(email);
-        if (user == null) {
-            throw new EntityNotFoundException("User not found with email: " + email);
-        }
+        User user = userService.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with email: " + email));
         Group group = groupService.getGroupById(groupId)
                 .orElseThrow(() -> new EntityNotFoundException("Group not found with id: " + groupId));
         Optional<AccessRequest> existingRequest = accessRequestRepository.findByParentIdAndGroupId(user.getId(), groupId);
