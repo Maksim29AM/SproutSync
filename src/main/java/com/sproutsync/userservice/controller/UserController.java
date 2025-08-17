@@ -1,8 +1,8 @@
 package com.sproutsync.userservice.controller;
 
-import com.sproutsync.userservice.dto.UserRequestDto;
-import com.sproutsync.userservice.dto.UserResponseDto;
-import com.sproutsync.userservice.dto.UserUpdateDto;
+import com.sproutsync.userservice.dto.userDto.request.UserCreateRequestDto;
+import com.sproutsync.userservice.dto.userDto.response.UserResponseDto;
+import com.sproutsync.userservice.dto.userDto.request.UserUpdateRequestDto;
 import com.sproutsync.userservice.model.User;
 import com.sproutsync.userservice.repository.RoleRepository;
 import com.sproutsync.userservice.service.UserService;
@@ -40,13 +40,13 @@ public class UserController {
     }
 
     @PostMapping
-    public UserResponseDto create(@RequestBody @Valid UserRequestDto dto) {
+    public UserResponseDto create(@RequestBody @Valid UserCreateRequestDto dto) {
         User saved = userService.create(UserMapper.toEntity(dto, roleRepository));
         return UserMapper.toDto(saved);
     }
 
     @PutMapping("/{id}")
-    public UserResponseDto update(@PathVariable Long id, @RequestBody @Valid UserUpdateDto dto) {
+    public UserResponseDto update(@PathVariable Long id, @RequestBody @Valid UserUpdateRequestDto dto) {
         User updated = userService.update(id, dto);
         return UserMapper.toDto(updated);
     }
