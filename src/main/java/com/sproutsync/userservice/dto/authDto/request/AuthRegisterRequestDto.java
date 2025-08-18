@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
+
 @Schema(name = "AuthRegisterRequest", description = "Registration payload for a new user")
 public class AuthRegisterRequestDto {
 
