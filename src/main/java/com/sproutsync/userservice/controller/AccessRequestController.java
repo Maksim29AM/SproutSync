@@ -44,7 +44,7 @@ public class AccessRequestController {
                 .collect(Collectors.toList());
     }
 
-    @Operation(summary = "Get requests by status", description = "Returns all access requests filtered by status")
+    @Operation(summary = "Get requests by status", description = "Returns all access requests filtered by status. Possible values: PENDING, APPROVED, REJECTED")
     @GetMapping
     public List<AccessResponseDto> getRequestsByStatus(@RequestParam String status) {
         List<AccessRequest> requests = accessRequestService.findAllByStatus(status);
