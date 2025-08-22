@@ -25,6 +25,14 @@ Dla administracji przedszkola dostępny jest panel umożliwiający:
 - 🗄️ **MySQL** jako baza danych
 - 🔄 Komunikacja poprzez **REST API**
 - 🛡️ Autoryzacja i uwierzytelnianie oparte na **JWT (JSON Web Token)**
+- ☁️ **AWS S3** — przechowywanie zdjęć i plików w chmurze
+- 📖 **Swagger / OpenAPI** — dokumentacja i testowanie API
 
 ## 🚧 Status projektu
 Projekt jest w fazie **aktywnego rozwoju**. Niektóre funkcje mogą być jeszcze niekompletne lub w trakcie implementacji.
+
+### 📅 Najbliższe kroki rozwoju:
+- 📧 Implementacja **powiadomień mailowych** dla rodziców.
+- 🧪 Dodanie **testów jednostkowych i integracyjnych** (JUnit, Mockito).
+- 🌐 Podłączenie prostego **front-endu** (React/Angular).
+- ☁️ Przejście na **prywatne AWS S3** (zamiast publicznego).
