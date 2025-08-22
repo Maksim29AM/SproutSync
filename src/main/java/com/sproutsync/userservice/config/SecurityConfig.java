@@ -34,6 +34,11 @@ public class SecurityConfig {
         return http
                 .csrf(costomizer -> costomizer.disable())
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
+                        .requestMatchers(
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html"
+                        ).permitAll()
                         .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
 
                         .requestMatchers(HttpMethod.POST, "/api/access-requests").hasRole("PARENT")

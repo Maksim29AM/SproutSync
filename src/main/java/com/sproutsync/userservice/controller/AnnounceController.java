@@ -10,6 +10,8 @@ import com.sproutsync.userservice.model.User;
 import com.sproutsync.userservice.service.AnnouncementService;
 import com.sproutsync.userservice.service.GroupService;
 import com.sproutsync.userservice.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,6 +22,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
+@Tag(name = "Announcements", description = "CRUD operations for group announcements")
 @RestController
 @RequestMapping("/api/groups/{idGroup}/announce")
 public class AnnounceController {
@@ -34,6 +37,7 @@ public class AnnounceController {
         this.userService = userService;
     }
 
+    @Operation(summary = "Create announcement", description = "Creates a new announcement for a given group")
     @PostMapping
     public AnnouncementResponseDto createAnnouncement(@PathVariable Long idGroup, @RequestBody @Valid AnnouncementCreateRequestDto announcementCreateDtoRequestDto, Authentication authentication) {
         Group group = groupService.getGroupById(idGroup)
@@ -44,17 +48,20 @@ public class AnnounceController {
         return AnnouncementMapper.toDto(saved);
     }
 
+    @Operation(summary = "Update announcement", description = "Updates an existing announcement by ID for a given group")
     @PutMapping("/{announceId}")
     public AnnouncementResponseDto updateAnnouncement(@PathVariable Long idGroup, @PathVariable Long announceId, @RequestBody @Valid AnnouncementUpdateRequestDto updateDto) {
         Announcement updated = announcementService.updateAnnouncement(idGroup, announceId, updateDto);
         return AnnouncementMapper.toDto(updated);
     }
 
+    @Operation(summary = "Delete announcement", description = "Deletes an announcement by ID for a given group")
     @DeleteMapping("/{announceId}")
     public void deleteAnnouncement(@PathVariable Long idGroup, @PathVariable Long announceId) {
         announcementService.deleteAnnouncement(idGroup, announceId);
     }
 
+    @Operation(summary = "Get announcement by ID", description = "Returns an announcement by ID for a given group")
     @GetMapping("/{announceId}")
     @PreAuthorize("@accessChecker.hasApprovedAccess(authentication.name, #idGroup)")
     public AnnouncementResponseDto getAnnouncementByGroupId(@PathVariable Long idGroup, @PathVariable Long announceId) {
@@ -62,6 +69,7 @@ public class AnnounceController {
         return AnnouncementMapper.toDto(announcement);
     }
 
+    @Operation(summary = "List all announcements", description = "Returns all announcements for a given group")
     @GetMapping
     @PreAuthorize("@accessChecker.hasApprovedAccess(authentication.name, #idGroup)")
     public List<AnnouncementResponseDto> getAllAnnouncementsByGroupId(@PathVariable Long idGroup) {

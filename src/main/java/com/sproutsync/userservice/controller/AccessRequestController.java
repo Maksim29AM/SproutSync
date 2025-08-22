@@ -7,6 +7,8 @@ import com.sproutsync.userservice.mapper.AccessRequestMapper;
 import com.sproutsync.userservice.model.AccessRequest;
 import com.sproutsync.userservice.service.AccessRequestService;
 import com.sproutsync.userservice.util.AccessStatus;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +16,7 @@ import java.util.List;
 
 import java.util.stream.Collectors;
 
+@Tag(name = "Access Requests", description = "CRUD operations for access requests to groups")
 @RestController
 @RequestMapping("/api/access-requests")
 public class AccessRequestController {
@@ -25,6 +28,7 @@ public class AccessRequestController {
     }
 
 
+    @Operation(summary = "Get requests for parent", description = "Returns all access requests created by a parent")
     @GetMapping("/parent/{id}")
     public List<AccessResponseDto> getRequestsForParent(@PathVariable Long id) {
         return accessRequestService.findRequestsByParentId(id).stream()
@@ -32,6 +36,7 @@ public class AccessRequestController {
                 .toList();
     }
 
+    @Operation(summary = "Get requests for group", description = "Returns all access requests for a given group")
     @GetMapping("/group/{id}")
     public List<AccessResponseDto> getRequestsByGroup(@PathVariable Long id) {
         return accessRequestService.findRequestsByGroupId(id).stream()
@@ -39,6 +44,7 @@ public class AccessRequestController {
                 .collect(Collectors.toList());
     }
 
+    @Operation(summary = "Get requests by status", description = "Returns all access requests filtered by status. Possible values: PENDING, APPROVED, REJECTED")
     @GetMapping
     public List<AccessResponseDto> getRequestsByStatus(@RequestParam String status) {
         List<AccessRequest> requests = accessRequestService.findAllByStatus(status);
@@ -47,12 +53,14 @@ public class AccessRequestController {
                 .collect(Collectors.toList());
     }
 
+    @Operation(summary = "Create access request", description = "Creates a new access request for a group")
     @PostMapping
     public AccessResponseDto createRequest(@RequestBody AccessCreateRequestDto dto, Authentication authentication) {
         AccessRequest saved = accessRequestService.createRequest(authentication.getName(), dto.getGroupId());
         return AccessRequestMapper.toDto(saved);
     }
 
+    @Operation(summary = "Update access request status", description = "Updates the status of an access request")
     @PutMapping("/status")
     public AccessResponseDto updateRequest(@RequestBody AccessUpdateRequestDto dto) {
         AccessRequest updated = accessRequestService.updateRequestStatus(
